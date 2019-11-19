@@ -51,44 +51,13 @@ public class Criminal extends People {
             ResultSet rs = stmt.executeQuery("SELECT * FROM criminal");
             while (rs.next()) {
                 if ((int) (random() * 6) < 7) {
-//                    switch ((int) random() * 5) {
-                    switch (1) {
-                        case 0:
-                            ResultSet rrs0 = stmt.executeQuery("SELECT * FROM criminal");
-//                            stmt.executeUpdate("UPDATE criminal SET deadAge = age WHERE profession = 'Criminal' AND deadAge <> age LIMIT 1");
-                            rrs0.close();
-                            break;
-                        case 1:
-                            ResultSet rrs1 = stmt.executeQuery("SELECT column FROM farmer " + " ORDER BY RAND() " + " LIMIT 1");
-                            if (rs.getInt("danger") == 0) {
-                                rrs1 = stmt.executeQuery("SELECT column FROM farmer ORDER BY RAND() LIMIT 1");
-                                rrs1.deleteRow();
-                            }
-                            else {
-                                rrs1.deleteRow();
-                                rrs1.close();
-                            }
+                    ResultSet rsall = stmt.executeQuery("SELECT id, profession, age, deadAge, sex, health, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `police` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `criminal` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `doctor` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `civilian` ORDER BY id;");
 
-                            break;
-                        case 2:
-                            ResultSet rrs2 = stmt.executeQuery("SELECT * FROM police");
-
-                            rrs2.close();
-                            break;
-                        case 3:
-                            ResultSet rrs3 = stmt.executeQuery("SELECT * FROM civilian");
-
-                            rrs3.close();
-                            break;
-                        case 4:
-                            ResultSet rrs4 = stmt.executeQuery("SELECT * FROM doctor");
-
-                            rrs4.close();
-                            break;
-                    }
+                    rsall.close();
                 }
             }
             rs.close();
+
         } catch (SQLException err) {
             System.err.println(err.getMessage());
         }

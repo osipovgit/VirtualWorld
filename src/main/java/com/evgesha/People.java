@@ -28,11 +28,11 @@ public class People {
             stat.execute("DROP TABLE IF EXISTS `doctor`");
             stat.execute("DROP TABLE IF EXISTS `criminal`");
             stat.execute("DROP TABLE IF EXISTS `civilian`");
-            stat.executeUpdate("CREATE  TABLE `farmer`(`id` INT(3), `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2), `talent` INT(2))");
-            stat.executeUpdate("CREATE  TABLE `police`(`id` INT(3), `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2))");
-            stat.executeUpdate("CREATE  TABLE `doctor`(`id` INT(3), `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2), `talent` INT(2))");
-            stat.executeUpdate("CREATE  TABLE `criminal`(`id` INT(3), `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2), `danger` INT(1))");
-            stat.executeUpdate("CREATE  TABLE `civilian`(`id` INT(3), `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2))");
+            stat.executeUpdate("CREATE  TABLE `farmer`(`id` INT(3) NOT NULL, `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2), `talent` INT(2))");
+            stat.executeUpdate("CREATE  TABLE `police`(`id` INT(3) NOT NULL, `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2))");
+            stat.executeUpdate("CREATE  TABLE `doctor`(`id` INT(3) NOT NULL, `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2), `talent` INT(2))");
+            stat.executeUpdate("CREATE  TABLE `criminal`(`id` INT(3) NOT NULL, `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2), `danger` INT(1))");
+            stat.executeUpdate("CREATE  TABLE `civilian`(`id` INT(3) NOT NULL, `profession` VARCHAR (10), `age` INT(3), `deadAge` INT(3), `sex` VARCHAR(5), `health` INT(3), `idMarriage` INT(2))");
         } catch (SQLException err) {
             System.err.println(err.getMessage());
         }
@@ -42,16 +42,10 @@ public class People {
         Class.forName(driver);
         try (Connection connection = DriverManager.getConnection(connect, login, password);
              Statement stmt = connection.createStatement()) {
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM `farmer` JOIN `police` ON farmer.id=police.id JOIN `doctor` ON police.id=doctor.id JOIN `criminal` ON doctor.id=criminal.id JOIN `civilian` ON criminal.id=civilian.id");
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM civilian");
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM criminal");
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM police");
-            ResultSet rs = stmt.executeQuery("SELECT * FROM farmer");
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM doctor");
-//            ResultSet rs = stmt.executeQuery("SELECT 1,2,3,4,5,6,7 FROM" + "(People)");
+            ResultSet rs = stmt.executeQuery("SELECT id, profession, age, deadAge, sex, health, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `police` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `criminal` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `doctor` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `civilian` ORDER BY id;");
             System.out.println("Id\tProfession\tAge\t\tDeadAge\t\tSex\t\tHealth\tidMarriage");
             while (rs.next()) {
-                System.out.printf("%-3s\t%-8s\t%-3s\t\t%-3s\t\t\t%-5s\t%-3s\t\t%-2s\n", rs.getInt("id"), rs.getString("profession"), rs.getInt("age"), rs.getInt("deadAge"), rs.getString("sex"), rs.getInt("health"), rs.getInt("idMarriage"));
+                System.out.printf("%-3s\t%-8s\t%-3s\t\t%-3s\t\t\t%-5s\t%-3s\t\t\t%-2s\n", rs.getInt("id"), rs.getString("profession"), rs.getInt("age"), rs.getInt("deadAge"), rs.getString("sex"), rs.getInt("health"), rs.getInt("idMarriage"));
             }
             rs.close();
         } catch (SQLException err) {

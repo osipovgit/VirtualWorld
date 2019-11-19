@@ -21,7 +21,7 @@ public class Civilian extends People {
         Class.forName(getDriver());
         try (Connection connection = DriverManager.getConnection(getConnect(), getLogin(), getPassword());
              Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate("INSERT INTO civilian ( )" + " VALUE (" + super.getId() + ", '" + super.getProfession() + "', " + super.getAge() + "," + super.getDeadAge() + ",'" + super.getSex() + "'," + super.getHealth() + "," + super.getIdMarriage() + ");");
+            stmt.executeUpdate("INSERT INTO civilian (`id`, `profession`, `age`, `deadAge`, `sex`, `health`, `idMarriage`)" + " VALUE (" + super.getId() + ",'" + super.getProfession() + "'," + super.getAge() + "," + super.getDeadAge() + ",'" + super.getSex() + "'," + super.getHealth() + "," + super.getIdMarriage() + ");");
         } catch (SQLException err) {
             System.err.println(err.getMessage());
         }
