@@ -18,6 +18,7 @@ public class People {
     private String driver = "com.mysql.jdbc.Driver";
     private Integer counterId = 0;
     int food = 45;
+    int generation = 5;
 
     void startGame() throws ClassNotFoundException {
         Class.forName("com.mysql.jdbc.Driver");
@@ -39,6 +40,21 @@ public class People {
     }
 
     void printAll() throws ClassNotFoundException {
+        Class.forName(driver);
+        try (Connection connection = DriverManager.getConnection(connect, login, password);
+             Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT id, profession, age, sex, health, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, sex, health, idMarriage FROM `police` UNION SELECT id, profession, age, sex, health, idMarriage FROM `criminal` UNION SELECT id, profession, age, sex, health, idMarriage FROM `doctor` UNION SELECT id, profession, age, sex, health, idMarriage FROM `civilian` ORDER BY id;");
+            System.out.println("Id\tProfession\tAge\t\tSex\t\tHealth\tidMarriage");
+            while (rs.next()) {
+                System.out.printf("%-3s\t%-8s\t%-3s\t\t%-5s\t%-3s\t\t\t%-2s\n", rs.getInt("id"), rs.getString("profession"), rs.getInt("age"), rs.getString("sex"), rs.getInt("health"), rs.getInt("idMarriage"));
+            }
+            rs.close();
+        } catch (SQLException err) {
+            System.err.println(err.getMessage());
+        }
+    }
+
+    void printGodMode() throws ClassNotFoundException {
         Class.forName(driver);
         try (Connection connection = DriverManager.getConnection(connect, login, password);
              Statement stmt = connection.createStatement()) {
@@ -87,6 +103,55 @@ public class People {
         }
     }
 
+    void doEat() throws ClassNotFoundException {
+        Class.forName(driver);
+        try (Connection connection = DriverManager.getConnection(connect, login, password);
+             Statement stmt = connection.createStatement(); Statement statement = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT id, profession, health  FROM `farmer` UNION  SELECT id, profession, health FROM `police` UNION SELECT id, profession, health FROM `criminal` UNION SELECT id, profession, health FROM `doctor` UNION SELECT id, profession, health FROM `civilian` ORDER BY id;");
+            int[] idCase = new int[counterId];
+            String[] tableCase = new String[counterId];
+            int i = 0;
+            while (rs.next()) {
+                idCase[i] = rs.getInt("id");
+                tableCase[i] = rs.getString("profession").toLowerCase();
+                ++i;
+            }
+            rs.close();
+            i = 0;
+            ResultSet resultSet = stmt.executeQuery("SELECT id, profession, health  FROM `farmer` UNION  SELECT id, profession, health FROM `police` UNION SELECT id, profession, health FROM `criminal` UNION SELECT id, profession, health FROM `doctor` UNION SELECT id, profession, health FROM `civilian` ORDER BY id;");
+            while (resultSet.next()) {
+                int eat = 1 + (int) (random() * 3);
+                if(food > 0) {
+                    if(food < eat){
+                        eat = food;
+                    }
+                    else food -= eat;
+                } else eat = 1;
+                switch (eat) {
+                    case 1:
+                        eat = -25;
+                        break;
+                    case 2:
+                        eat = 5;
+                        break;
+                    case 3:
+                        eat = 17;
+                        break;
+                }
+                statement.executeUpdate("UPDATE " + tableCase[i] + " SET health = health + " + eat + " WHERE id = " + idCase[i]);
+                System.out.println(idCase[i]);
+                if (resultSet.getInt("health") > 150){
+                    System.out.println(resultSet.getInt("id")+"l");
+                    statement.executeUpdate("UPDATE " + tableCase[i] + " SET health = 150 WHERE id = " + idCase[i]);
+                }
+                ++i;
+            }
+            resultSet.close();
+        } catch (SQLException err) {
+            System.err.println(err.getMessage());
+        }
+    }
+
     void oneYearLater() throws ClassNotFoundException {
         Police police = new Police();
         Farmer farmer = new Farmer();
@@ -106,19 +171,19 @@ public class People {
 
         police.catchTheCriminal();
         food = farmer.generationFood(food);
-        //random food +-hp
-//        criminal.doSmthBad();                                                                                           //criminal work
+        doEat();
+//        criminal.doSmthBad(counterId);                                                                                  //criminal work
         //doctors work
         //marriage and have sex
-        createGeneration(5);
-
+        createGeneration(generation);
+        generation = 0;
         try (Connection connection = DriverManager.getConnection(connect, login, password);                             //kill if deadAge == age
              Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate("DELETE FROM civilian WHERE `deadAge` = `age`");
-            stmt.executeUpdate("DELETE FROM criminal WHERE `deadAge` = `age`");
-            stmt.executeUpdate("DELETE FROM police WHERE `deadAge` = `age`");
-            stmt.executeUpdate("DELETE FROM farmer WHERE `deadAge` = `age`");
-            stmt.executeUpdate("DELETE FROM doctor WHERE `deadAge` = `age`");
+            stmt.executeUpdate("DELETE FROM civilian WHERE `deadAge` = `age` OR `health` < 1");
+            stmt.executeUpdate("DELETE FROM criminal WHERE `deadAge` = `age` OR `health` < 1");
+            stmt.executeUpdate("DELETE FROM police WHERE `deadAge` = `age` OR `health` < 1");
+            stmt.executeUpdate("DELETE FROM farmer WHERE `deadAge` = `age` OR `health` < 1");
+            stmt.executeUpdate("DELETE FROM doctor WHERE `deadAge` = `age` OR `health` < 1");
 
         } catch (SQLException err) {
             System.err.println(err.getMessage());

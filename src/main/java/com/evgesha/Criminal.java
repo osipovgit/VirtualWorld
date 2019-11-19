@@ -44,7 +44,7 @@ public class Criminal extends People {
         }
     }
 
-    void doSmthBad() throws ClassNotFoundException {
+    void doSmthBad(int idid) throws ClassNotFoundException {
         Class.forName(getDriver());
         try (Connection connection = DriverManager.getConnection(getConnect(), getLogin(), getPassword());
              Statement stmt = connection.createStatement()) {
@@ -52,6 +52,26 @@ public class Criminal extends People {
             while (rs.next()) {
                 if ((int) (random() * 6) < 7) {
                     ResultSet rsall = stmt.executeQuery("SELECT id, profession, age, deadAge, sex, health, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `police` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `criminal` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `doctor` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `civilian` ORDER BY id;");
+                    int[] idCase = new int[idid];
+                    String[] tableCase = new String[idid];
+                    int i = 0;
+                    while (rsall.next()) {
+                        if(rs.getInt("id") != rsall.getInt("id")) {
+                            idCase[i] = rsall.getInt("id");
+                            tableCase[i] = rsall.getString("profession");
+                            ++i;
+                        }
+                        System.out.println(idCase[i] + tableCase[i]);
+                    }
+                    i = (int) (random() * i);
+                    System.out.println(idCase[i]+tableCase[i]);
+                    if (rs.getInt("danger") == 1) {
+                        stmt.executeUpdate("UPDATE '" + tableCase[i] + "' SET deadAge = age WHERE id = " + idCase[i] + ";");
+                        System.out.println(idCase[i]);
+                    } else {
+                        stmt.executeUpdate("UPDATE '" + tableCase[i] + "' SET health = health - 40 WHERE id = " + idCase[i] + ";");
+                        System.out.println(idCase[i]);
+                    }
 
                     rsall.close();
                 }
