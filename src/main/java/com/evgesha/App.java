@@ -12,6 +12,7 @@ public class App {
         int y, year = -1;
         do {
             people.oneYearLater();
+            System.out.println("\n");
 //            people.printAll();
             people.printGodMode();
             System.out.println("\n╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶  ╶\n" + ++year + " year is over.\nNow we have " + people.food + " units of food.\nNext year...");

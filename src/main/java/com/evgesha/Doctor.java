@@ -59,7 +59,6 @@ public class Doctor extends People {
                     } else {
                         statement.executeUpdate("UPDATE " + rs.getString("profession").toLowerCase() + " SET health = health +" + talentDoc[rnd] + " WHERE id = " + rs.getInt("id"));
                     }
-                    System.out.println(talentDoc[rnd] + "td");
                 }
             }
 

@@ -19,6 +19,7 @@ public class People {
     private Integer counterId = 0;
     int food = 45;
     int generation = 5;
+    int marriage = 1;
 
     void startGame() throws ClassNotFoundException {
         Class.forName("com.mysql.jdbc.Driver");
@@ -121,11 +122,10 @@ public class People {
             ResultSet resultSet = stmt.executeQuery("SELECT id, profession, health  FROM `farmer` UNION  SELECT id, profession, health FROM `police` UNION SELECT id, profession, health FROM `criminal` UNION SELECT id, profession, health FROM `doctor` UNION SELECT id, profession, health FROM `civilian` ORDER BY id;");
             while (resultSet.next()) {
                 int eat = 1 + (int) (random() * 3);
-                if(food > 0) {
-                    if(food < eat){
+                if (food > 0) {
+                    if (food < eat) {
                         eat = food;
-                    }
-                    else food -= eat;
+                    } else food -= eat;
                 } else eat = 1;
                 switch (eat) {
                     case 1:
@@ -139,7 +139,7 @@ public class People {
                         break;
                 }
 //                System.out.println(idCase[i]);
-                if (resultSet.getInt("health") + eat > 150){
+                if (resultSet.getInt("health") + eat > 150) {
                     statement.executeUpdate("UPDATE " + tableCase[i] + " SET health = 150 WHERE id = " + idCase[i]);
                 } else {
                     statement.executeUpdate("UPDATE " + tableCase[i] + " SET health = health + " + eat + " WHERE id = " + idCase[i]);
@@ -155,27 +155,57 @@ public class People {
     void marryMe() throws ClassNotFoundException {
         Class.forName(driver);
         try (Connection connection = DriverManager.getConnection(connect, login, password);
-             Statement stmt = connection.createStatement(); Statement statement = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT id, profession, age, deadAge, sex, health, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `police` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `criminal` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `doctor` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `civilian` ORDER BY id;");
-            int[] idCase = new int[counterId];
-            String[] tableCase = new String[counterId];
-            int i = 0;
+             Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT id, profession, age, sex, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, sex, idMarriage FROM `police` UNION SELECT id, profession, age, sex, idMarriage FROM `criminal` UNION SELECT id, profession, age, sex, idMarriage FROM `doctor` UNION SELECT id, profession, age, sex, idMarriage FROM `civilian` ORDER BY id;");
+            int[] widCase = new int[counterId];
+            String[] wtableCase = new String[counterId];
+            int[] midCase = new int[counterId];
+            String[] mtableCase = new String[counterId];
+            int i = 0, j = 0;
             while (rs.next()) {
-                idCase[i] = rs.getInt("id");
-                tableCase[i] = rs.getString("profession").toLowerCase();
-                ++i;
+                if (rs.getInt("age") > 5 & rs.getInt("idMarriage") == 0 & rs.getString("sex").equals("man")) {
+                    midCase[i] = rs.getInt("id");
+                    mtableCase[i] = rs.getString("profession").toLowerCase();
+                    ++i;
+                }
+                if (rs.getInt("age") > 5 & rs.getInt("idMarriage") == 0 & rs.getString("sex").equals("woman")) {
+                    widCase[j] = rs.getInt("id");
+                    wtableCase[j] = rs.getString("profession").toLowerCase();
+                    ++j;
+                }
+            }
+            if ((int) (random() * 5) == 3 & i != 0 & j != 0) {
+                int rndi = (int) (random() * i), rndj = (int) (random() * j);
+                stmt.executeUpdate("UPDATE " + wtableCase[rndj] + " SET idMarriage = " + marriage + " WHERE id = " + widCase[rndj]);
+                stmt.executeUpdate("UPDATE " + mtableCase[rndi] + " SET idMarriage = " + marriage + " WHERE id = " + midCase[rndi]);
+                ++marriage;
+                System.out.println("[" + widCase[rndj] + "] " + wtableCase[rndj] + " married  [" + midCase[rndi] + "] " + mtableCase[rndi]);
+            }
+            rs = stmt.executeQuery("SELECT id, profession, age, sex, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, sex, idMarriage FROM `police` UNION SELECT id, profession, age, sex, idMarriage FROM `criminal` UNION SELECT id, profession, age, sex, idMarriage FROM `doctor` UNION SELECT id, profession, age, sex, idMarriage FROM `civilian` ORDER BY id;");
+            int[] idM = new int[marriage];
+
+            while (rs.next()) {
+                if (rs.getInt("idMarriage") != 0) {
+                    ++idM[marriage - 1];
+                }
             }
             rs.close();
+            int getdet = -1;
+            while (++getdet < marriage) {
+                if(idM[getdet] == 2 & (int) (random() * 3) == 2){
+                    ++generation;
+                }
+            }
         } catch (SQLException err) {
             System.err.println(err.getMessage());
         }
     }
 
     void oneYearLater() throws ClassNotFoundException {
-        Police police = new Police();
-        Farmer farmer = new Farmer();
         Criminal criminal = new Criminal();
         Doctor doctor = new Doctor();
+        Farmer farmer = new Farmer();
+        Police police = new Police();
         Class.forName(driver);
 
         try (Connection connection = DriverManager.getConnection(connect, login, password);                             //++age for all
@@ -191,11 +221,10 @@ public class People {
 
         police.catchTheCriminal(counterId);
         food = farmer.generationFood(food);
-        doEat();
-        criminal.doSmthBad(counterId);                                                                                  //criminal work
-        doctor.healthUp(counterId);                                                                                     //doctors work
-//        marryMe();
-
+        doEat();                                                                                                        // health distribution relative to food
+        criminal.doSmthBad(counterId);                                                                                  // criminal work
+        doctor.healthUp(counterId);                                                                                     // doctors work
+        marryMe();                                                                                                      //marriage and birth
         createGeneration(generation);
         generation = 0;
         try (Connection connection = DriverManager.getConnection(connect, login, password);                             //kill if deadAge == age

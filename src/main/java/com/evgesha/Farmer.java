@@ -59,7 +59,6 @@ public class Farmer extends People {
         }
         return food;
     }
-
 }
 /*
 1-3: 6

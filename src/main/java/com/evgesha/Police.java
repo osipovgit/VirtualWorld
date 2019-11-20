@@ -44,7 +44,9 @@ public class Police extends People {
                 ++chance;
             }
             if ((int) (random() * 10) < chance && col != -1) {
-                stmt.executeUpdate("UPDATE criminal SET deadAge = age WHERE id = " + idCase[(int) (random() * col)] + " AND deadAge <> age LIMIT 1");
+                int rnd = (int) (random() * col);
+                stmt.executeUpdate("UPDATE criminal SET deadAge = age WHERE id = " + idCase[rnd] + " AND deadAge <> age LIMIT 1");
+                System.out.println("[" + idCase[rnd] + "] Criminal was caught by " + chance + " policeman");
             }
             rs.close();
         } catch (SQLException err) {

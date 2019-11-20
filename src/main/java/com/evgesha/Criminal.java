@@ -63,10 +63,10 @@ public class Criminal extends People {
                 int bad = (int) (random() * i);
                 if (rs.getInt("danger") == 1 && rs.getInt("id") != idCase[bad]) {
                     statement.executeUpdate("UPDATE " + tableCase[bad] + " SET `deadAge` = `age` WHERE id = " + idCase[bad]);
-//                    System.out.println(rs.getInt("id") + " kill id=" + idCase[bad]);
+                    System.out.println("[" + idCase[bad] + "] " + tableCase[bad] + " was killed by [" + rs.getInt("id") + "] Criminal");
                 } else if (rs.getInt("id") != idCase[bad]) {
                     statement.executeUpdate("UPDATE " + tableCase[bad] + " SET health = health - 40 WHERE id = " + idCase[bad]);
-//                    System.out.println(rs.getInt("id") + " -40 id=" + idCase[bad]);
+                    System.out.println("[" + idCase[bad] + "] " + tableCase[bad] +  " was damaged by [" + rs.getInt("id") + "] Criminal");
                 }
                 }
             }
