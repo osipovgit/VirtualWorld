@@ -138,11 +138,11 @@ public class People {
                         eat = 17;
                         break;
                 }
-                statement.executeUpdate("UPDATE " + tableCase[i] + " SET health = health + " + eat + " WHERE id = " + idCase[i]);
-                System.out.println(idCase[i]);
-                if (resultSet.getInt("health") > 150){
-                    System.out.println(resultSet.getInt("id")+"l");
+//                System.out.println(idCase[i]);
+                if (resultSet.getInt("health") + eat > 150){
                     statement.executeUpdate("UPDATE " + tableCase[i] + " SET health = 150 WHERE id = " + idCase[i]);
+                } else {
+                    statement.executeUpdate("UPDATE " + tableCase[i] + " SET health = health + " + eat + " WHERE id = " + idCase[i]);
                 }
                 ++i;
             }
@@ -152,10 +152,30 @@ public class People {
         }
     }
 
+    void marryMe() throws ClassNotFoundException {
+        Class.forName(driver);
+        try (Connection connection = DriverManager.getConnection(connect, login, password);
+             Statement stmt = connection.createStatement(); Statement statement = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT id, profession, age, deadAge, sex, health, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `police` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `criminal` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `doctor` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `civilian` ORDER BY id;");
+            int[] idCase = new int[counterId];
+            String[] tableCase = new String[counterId];
+            int i = 0;
+            while (rs.next()) {
+                idCase[i] = rs.getInt("id");
+                tableCase[i] = rs.getString("profession").toLowerCase();
+                ++i;
+            }
+            rs.close();
+        } catch (SQLException err) {
+            System.err.println(err.getMessage());
+        }
+    }
+
     void oneYearLater() throws ClassNotFoundException {
         Police police = new Police();
         Farmer farmer = new Farmer();
         Criminal criminal = new Criminal();
+        Doctor doctor = new Doctor();
         Class.forName(driver);
 
         try (Connection connection = DriverManager.getConnection(connect, login, password);                             //++age for all
@@ -169,12 +189,13 @@ public class People {
             System.err.println(err.getMessage());
         }
 
-        police.catchTheCriminal();
+        police.catchTheCriminal(counterId);
         food = farmer.generationFood(food);
         doEat();
-//        criminal.doSmthBad(counterId);                                                                                  //criminal work
-        //doctors work
-        //marriage and have sex
+        criminal.doSmthBad(counterId);                                                                                  //criminal work
+        doctor.healthUp(counterId);                                                                                     //doctors work
+//        marryMe();
+
         createGeneration(generation);
         generation = 0;
         try (Connection connection = DriverManager.getConnection(connect, login, password);                             //kill if deadAge == age

@@ -28,23 +28,27 @@ public class Police extends People {
         }
     }
 
-    void catchTheCriminal () throws ClassNotFoundException {
-        if ((int) (random() * 10) > 8) {
-            Class.forName(getDriver());
-            try (Connection connection = DriverManager.getConnection(getConnect(), getLogin(), getPassword());
-                 Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
-                ResultSet rs = stmt.executeQuery("SELECT * FROM criminal");
-                int col = 0;
-                while (rs.next()) {
-                    ++col;
-                }
-                if (col != 0) {
-                    stmt.executeUpdate("UPDATE criminal SET deadAge = age WHERE profession = 'Criminal' AND deadAge <> age LIMIT 1");
-                }
-                rs.close();
-            } catch (SQLException err) {
-                System.err.println(err.getMessage());
+    void catchTheCriminal(int idid) throws ClassNotFoundException {
+        Class.forName(getDriver());
+        try (Connection connection = DriverManager.getConnection(getConnect(), getLogin(), getPassword());
+             Statement stmt = connection.createStatement(); Statement statement = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT * FROM criminal");
+            int col = -1;
+            int[] idCase = new int[idid];
+            while (rs.next()) {
+                idCase[++col] = rs.getInt("id");
             }
+            rs = stmt.executeQuery("SELECT * FROM `police`");
+            int chance = 0;
+            while (rs.next()) {
+                ++chance;
+            }
+            if ((int) (random() * 10) < chance && col != -1) {
+                stmt.executeUpdate("UPDATE criminal SET deadAge = age WHERE id = " + idCase[(int) (random() * col)] + " AND deadAge <> age LIMIT 1");
+            }
+            rs.close();
+        } catch (SQLException err) {
+            System.err.println(err.getMessage());
         }
     }
 }

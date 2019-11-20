@@ -1,9 +1,6 @@
 package com.evgesha;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import static java.lang.Math.random;
 
@@ -42,4 +39,35 @@ public class Doctor extends People {
         }
     }
 
+    void healthUp(int idid) throws ClassNotFoundException {
+        Class.forName(getDriver());
+        try (Connection connection = DriverManager.getConnection(getConnect(), getLogin(), getPassword());
+             Statement stmt = connection.createStatement(); Statement statement = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT id, talent  FROM `doctor`");
+            int[] talentDoc = new int[idid];
+            int i = 0;
+            while (rs.next()) {
+                talentDoc[i] = rs.getInt("talent") * 2;
+                ++i;
+            }
+            rs = stmt.executeQuery("SELECT id, profession, health  FROM `farmer` UNION  SELECT id, profession, health FROM `police` UNION SELECT id, profession, health FROM `criminal` UNION SELECT id, profession, health FROM `doctor` UNION SELECT id, profession, health FROM `civilian` ORDER BY id;");
+            while (rs.next()) {
+                int rnd = (int) (random() * i);
+                if (rs.getInt("id") != rnd + 1){
+                    if (rs.getInt("health") + talentDoc[rnd] > 150){
+                        statement.executeUpdate("UPDATE " + rs.getString("profession").toLowerCase() + " SET health = 150 WHERE id = " + rs.getInt("id"));
+                    } else {
+                        statement.executeUpdate("UPDATE " + rs.getString("profession").toLowerCase() + " SET health = health +" + talentDoc[rnd] + " WHERE id = " + rs.getInt("id"));
+                    }
+                    System.out.println(talentDoc[rnd] + "td");
+                }
+            }
+
+
+            rs.close();
+        } catch (SQLException err) {
+            System.err.println(err.getMessage());
+        }
+
+    }
 }

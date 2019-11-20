@@ -47,37 +47,30 @@ public class Criminal extends People {
     void doSmthBad(int idid) throws ClassNotFoundException {
         Class.forName(getDriver());
         try (Connection connection = DriverManager.getConnection(getConnect(), getLogin(), getPassword());
-             Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM criminal");
+             Statement stmt = connection.createStatement(); Statement statement = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT id, profession, health  FROM `farmer` UNION  SELECT id, profession, health FROM `police` UNION SELECT id, profession, health FROM `criminal` UNION SELECT id, profession, health FROM `doctor` UNION SELECT id, profession, health FROM `civilian` ORDER BY id;");
+            int[] idCase = new int[idid];
+            String[] tableCase = new String[idid];
+            int i = 0;
             while (rs.next()) {
-                if ((int) (random() * 6) < 7) {
-                    ResultSet rsall = stmt.executeQuery("SELECT id, profession, age, deadAge, sex, health, idMarriage  FROM `farmer` UNION  SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `police` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `criminal` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `doctor` UNION SELECT id, profession, age, deadAge, sex, health, idMarriage FROM `civilian` ORDER BY id;");
-                    int[] idCase = new int[idid];
-                    String[] tableCase = new String[idid];
-                    int i = 0;
-                    while (rsall.next()) {
-                        if(rs.getInt("id") != rsall.getInt("id")) {
-                            idCase[i] = rsall.getInt("id");
-                            tableCase[i] = rsall.getString("profession");
-                            ++i;
-                        }
-                        System.out.println(idCase[i] + tableCase[i]);
-                    }
-                    i = (int) (random() * i);
-                    System.out.println(idCase[i]+tableCase[i]);
-                    if (rs.getInt("danger") == 1) {
-                        stmt.executeUpdate("UPDATE '" + tableCase[i] + "' SET deadAge = age WHERE id = " + idCase[i] + ";");
-                        System.out.println(idCase[i]);
-                    } else {
-                        stmt.executeUpdate("UPDATE '" + tableCase[i] + "' SET health = health - 40 WHERE id = " + idCase[i] + ";");
-                        System.out.println(idCase[i]);
-                    }
-
-                    rsall.close();
+                idCase[i] = rs.getInt("id");
+                tableCase[i] = rs.getString("profession").toLowerCase();
+                ++i;
+            }
+            rs = stmt.executeQuery("SELECT * FROM `criminal`");
+            while (rs.next()) {
+                if((int) (random() * 8) > 6){
+                int bad = (int) (random() * i);
+                if (rs.getInt("danger") == 1 && rs.getInt("id") != idCase[bad]) {
+                    statement.executeUpdate("UPDATE " + tableCase[bad] + " SET `deadAge` = `age` WHERE id = " + idCase[bad]);
+//                    System.out.println(rs.getInt("id") + " kill id=" + idCase[bad]);
+                } else if (rs.getInt("id") != idCase[bad]) {
+                    statement.executeUpdate("UPDATE " + tableCase[bad] + " SET health = health - 40 WHERE id = " + idCase[bad]);
+//                    System.out.println(rs.getInt("id") + " -40 id=" + idCase[bad]);
+                }
                 }
             }
             rs.close();
-
         } catch (SQLException err) {
             System.err.println(err.getMessage());
         }
