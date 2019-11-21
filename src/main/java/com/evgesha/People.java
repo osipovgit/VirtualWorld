@@ -70,6 +70,23 @@ public class People {
         }
     }
 
+    int deepEnd() throws ClassNotFoundException {
+        Class.forName(driver);
+        int theEnd = 0;
+        try (Connection connection = DriverManager.getConnection(connect, login, password);
+             Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT id  FROM `farmer` UNION  SELECT id FROM `police` UNION SELECT id FROM `criminal` UNION SELECT id FROM `doctor` UNION SELECT id FROM `civilian` ORDER BY id;");
+            rs.beforeFirst();
+            if (!rs.next()){
+                theEnd = -46486565;
+            }
+            rs.close();
+        } catch (SQLException err) {
+            System.err.println(err.getMessage());
+        }
+        return theEnd;
+    }
+
     void createGeneration(int n) throws ClassNotFoundException {
         String[] prof = {"Civilian", "Farmer", "Civilian", "Police", "Civilian", "Doctor", "Civilian", "Criminal"};
         String[] sexxx = {"man", "woman"};
@@ -138,7 +155,10 @@ public class People {
                         eat = 17;
                         break;
                 }
-//                System.out.println(idCase[i]);
+                if (food > 100){
+                    eat += 5;
+                    food -= 1;
+                }
                 if (resultSet.getInt("health") + eat > 150) {
                     statement.executeUpdate("UPDATE " + tableCase[i] + " SET health = 150 WHERE id = " + idCase[i]);
                 } else {
@@ -174,7 +194,7 @@ public class People {
                     ++j;
                 }
             }
-            if ((int) (random() * 5) == 3 & i != 0 & j != 0) {
+            if ((int) (random() * 4) == 3 & i != 0 & j != 0) {
                 int rndi = (int) (random() * i), rndj = (int) (random() * j);
                 stmt.executeUpdate("UPDATE " + wtableCase[rndj] + " SET idMarriage = " + marriage + " WHERE id = " + widCase[rndj]);
                 stmt.executeUpdate("UPDATE " + mtableCase[rndi] + " SET idMarriage = " + marriage + " WHERE id = " + midCase[rndi]);
@@ -192,7 +212,7 @@ public class People {
             rs.close();
             int getdet = -1;
             while (++getdet < marriage) {
-                if(idM[getdet] == 2 & (int) (random() * 3) == 2){
+                if (idM[getdet] == 2 & (int) (random() * 2) == 1) {
                     ++generation;
                 }
             }
