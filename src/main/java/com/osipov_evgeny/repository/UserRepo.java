@@ -29,5 +29,5 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = "update users set longest_game =:longest_game where id =:id")
-    void updateLongestGameById(@Param("id") Long id, @Param("longestGame") Integer longestGame);
+    void updateLongestGameById(@Param("id") Long id, @Param("longest_game") Integer longestGame);
 }
