@@ -1,4 +1,4 @@
-package com.evgesha;
+package com.osipov_evgeny.old_classes;
 
 import java.sql.*;
 
@@ -59,15 +59,15 @@ public class Criminal extends People {
             }
             rs = stmt.executeQuery("SELECT * FROM `criminal`");
             while (rs.next()) {
-                if((int) (random() * 8) > 6){
-                int bad = (int) (random() * i);
-                if (rs.getInt("danger") == 1 && rs.getInt("id") != idCase[bad]) {
-                    statement.executeUpdate("UPDATE " + tableCase[bad] + " SET `deadAge` = `age` WHERE id = " + idCase[bad]);
-                    System.out.println("[" + idCase[bad] + "] " + tableCase[bad] + " was killed by [" + rs.getInt("id") + "] Criminal");
-                } else if (rs.getInt("id") != idCase[bad]) {
-                    statement.executeUpdate("UPDATE " + tableCase[bad] + " SET health = health - 40 WHERE id = " + idCase[bad]);
-                    System.out.println("[" + idCase[bad] + "] " + tableCase[bad] +  " was damaged by [" + rs.getInt("id") + "] Criminal");
-                }
+                if ((int) (random() * 8) > 6) {
+                    int bad = (int) (random() * i);
+                    if (rs.getInt("danger") == 1 && rs.getInt("id") != idCase[bad]) {
+                        statement.executeUpdate("UPDATE " + tableCase[bad] + " SET `deadAge` = `age` WHERE id = " + idCase[bad]);
+                        System.out.println("[" + idCase[bad] + "] " + tableCase[bad] + " was killed by [" + rs.getInt("id") + "] Criminal");
+                    } else if (rs.getInt("id") != idCase[bad]) {
+                        statement.executeUpdate("UPDATE " + tableCase[bad] + " SET health = health - 40 WHERE id = " + idCase[bad]);
+                        System.out.println("[" + idCase[bad] + "] " + tableCase[bad] + " was damaged by [" + rs.getInt("id") + "] Criminal");
+                    }
                 }
             }
             rs.close();
@@ -76,7 +76,3 @@ public class Criminal extends People {
         }
     }
 }
-
-//    SELECT column FROM table
-//    ORDER BY RAND()
-//LIMIT 1

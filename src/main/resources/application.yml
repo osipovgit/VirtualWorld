@@ -1,0 +1,14 @@
+server:
+  port: SERVER_PORT
+spring:
+  thymeleaf:
+    prefix: file:src/main/resources/templates/
+    cache: false
+  datasource:
+    url: jdbc:mysql://HOST:PORT/DATABASE?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    username: USERNAME
+    password: PASSWORD
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

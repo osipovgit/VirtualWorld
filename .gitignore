@@ -1,2 +1,11 @@
-out
+build
+gradle
+.gradle
+gradlew*
 .idea
+*.iml
+log
+*.log
+out
+.class
+settings.gradle

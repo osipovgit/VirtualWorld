@@ -1,4 +1,4 @@
-package com.evgesha;
+package com.osipov_evgeny.old_classes;
 
 import java.util.Scanner;
 
@@ -19,5 +19,6 @@ public class App {
             y = s.nextInt();
             y = people.deepEnd();
         } while (y != -46486565);
+        System.out.println("\n\t  ══════════════════════════════════════════════════\n\t  ╠  Game over.The world has existed for " + year + " years  ╣\n\t  ══════════════════════════════════════════════════\n");
     }
 }

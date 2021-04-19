@@ -1,4 +1,4 @@
-package com.evgesha;
+package com.osipov_evgeny.old_classes;
 
 import java.sql.*;
 
@@ -12,9 +12,9 @@ public class People {
     private String sex;
     private Integer health;
     private Integer idMarriage;
-    private String connect = "jdbc:mysql://localhost:3306/virtualworld?autoReconnect=true&useSSL=false";
+    private String connect = "jdbc:mysql://localhost:3306/virtual_world?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false";
     private String login = "root";
-    private String password = "1236";
+    private String password = "exibxqS1-o";
     private String driver = "com.mysql.jdbc.Driver";
     private Integer counterId = 0;
     int food = 45;
@@ -22,8 +22,8 @@ public class People {
     int marriage = 1;
 
     void startGame() throws ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualworld?autoReconnect=true&useSSL=false", "root", "1236");
+        Class.forName(driver);
+        try (Connection connection = DriverManager.getConnection(connect, login, password);
              Statement stat = connection.createStatement()) {
             stat.execute("DROP TABLE IF EXISTS `farmer`");
             stat.execute("DROP TABLE IF EXISTS `police`");

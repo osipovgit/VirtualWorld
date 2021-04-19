@@ -1,4 +1,4 @@
-package com.evgesha;
+package com.osipov_evgeny.old_classes;
 
 import java.sql.*;
 
