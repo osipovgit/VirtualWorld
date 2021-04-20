@@ -9,6 +9,9 @@ import java.util.Random;
 @Entity
 @Table(name = "farmers")
 public class Farmer extends People {
+    // TODO: метод для восполнения запасов еды (связать с временем года?)
+    //       талант растет со временем?
+
     private Integer talent;
 
     public Farmer() {
@@ -23,6 +26,4 @@ public class Farmer extends People {
     public Integer getTalent() {
         return talent;
     }
-
-    // TODO: метод для восполнения запасов еды
 }

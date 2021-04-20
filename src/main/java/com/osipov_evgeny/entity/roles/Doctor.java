@@ -7,6 +7,8 @@ import java.util.Random;
 @Entity
 @Table(name = "doctors")
 public class Doctor extends People {
+    // TODO: метод для лечения
+
     private Integer talent;
 
     public Doctor() {
@@ -23,5 +25,4 @@ public class Doctor extends People {
         return talent;
     }
 
-    // TODO: метод для лечения
 }

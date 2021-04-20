@@ -8,6 +8,8 @@ import java.util.Random;
 @Entity
 @Table(name = "mafias")
 public class Mafia extends People{
+    // TODO: метод для убийства/урона
+
     private Integer danger;
 
     public Mafia() {
@@ -22,6 +24,4 @@ public class Mafia extends People{
     public Integer getDanger() {
         return danger;
     }
-
-    // TODO: метод для убийства/урона
 }
