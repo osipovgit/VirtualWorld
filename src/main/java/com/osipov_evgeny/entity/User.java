@@ -15,6 +15,8 @@ public class User {
     private Integer longestGame;
 
     public User() {
+        this.countGames = 0;
+        this.longestGame = 0;
     }
 
     public User(String username, String password) {
@@ -67,5 +69,16 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password, countGames, longestGame);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", countGames=" + countGames +
+                ", longestGame=" + longestGame +
+                '}';
     }
 }

@@ -1,34 +1,35 @@
 package com.osipov_evgeny.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class WebController {
     // TODO: отображение страниц
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String homePage(Model model){
         return "home_page";
     }
 
-    @RequestMapping("/auth")
+    @GetMapping("/auth")
     public String authorization(Model model){
         return "authorization";
     }
 
-    @RequestMapping("/join")
+    @GetMapping("/join")
     public String registration(Model model){
-        return "registration";
+        return "registration.html";
     }
 
-    @RequestMapping("/simulation")
+    @GetMapping("/simulation")
     public String simulationView(Model model){
         return "world_simulation";
     }
 
-    @RequestMapping("/result")
+    @GetMapping("/result")
     public String resultView(Model model){
         return "simulation_result";
     }

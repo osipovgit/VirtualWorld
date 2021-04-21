@@ -5,6 +5,19 @@
     <title>Authorization</title>
 </head>
 <body>
-
+<h1>Authorization</h1>
+<form action="" method="post">
+    <div>
+        <label>login</label><br>
+        <input required type="text" name="username" placeholder="Username" minlength="5" maxlength="50">
+    </div>
+    <div>
+        <label>Password</label><br>
+        <input required type="password" name="password" placeholder="Password" minlength="5" maxlength="50">
+    </div>
+    <br>
+    <button type="submit">Login</button>
+    <input type="button" value="Go to registration" onclick="document.location.href='join'">
+</form>
 </body>
 </html>

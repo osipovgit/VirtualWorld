@@ -1,9 +1,13 @@
 server:
   port: SERVER_PORT
 spring:
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
   thymeleaf:
     prefix: file:src/main/resources/templates/
-    cache: false
+    suffix: .html
   datasource:
     url: jdbc:mysql://HOST:PORT/DATABASE?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: USERNAME

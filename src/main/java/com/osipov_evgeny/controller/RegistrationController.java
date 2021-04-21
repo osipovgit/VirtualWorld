@@ -1,13 +1,17 @@
 package com.osipov_evgeny.controller;
 
+import com.osipov_evgeny.entity.User;
 import com.osipov_evgeny.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 
-@RestController
+import javax.servlet.http.HttpServletResponse;
+
+@Controller
 public class RegistrationController {
-    //    TODO: регистрация
-    //    TODO: авторизация
+    //    TODO: exception messages
     //          cookie?
 
     @Autowired
@@ -17,13 +21,27 @@ public class RegistrationController {
         this.userRepo = userRepo;
     }
 
-//    @RequestMapping("/auth")
-//    public String authorization(Model model){
-//        return "authorization";
-//    }
-//
-//    @RequestMapping("/join")
-//    public String registration(Model model){
-//        return "registration";
-//    }
+    @PostMapping("/auth")
+    public String authorization(User user, HttpServletResponse response, Model model){
+        User userFromDatabase = userRepo.findByUsername(user.getUsername());
+        if (userFromDatabase == null) {
+            return "redirect:/auth";
+        }
+        else if (userFromDatabase.getUsername().equals(user.getUsername())
+                && userFromDatabase.getPassword().equals(user.getPassword())) {
+            return "redirect:/";
+        }
+        return "redirect:/auth";
+    }
+
+    @PostMapping("/join")
+    public String registration(User user, HttpServletResponse response, Model model) {
+        User userFromDatabase = userRepo.findByUsername(user.getUsername());
+        System.out.println(user);
+        if (userFromDatabase == null) {
+            userRepo.save(user);
+            return "redirect:/";
+        }
+        return "redirect:/join";
+    }
 }
