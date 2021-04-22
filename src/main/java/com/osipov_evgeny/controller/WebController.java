@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class WebController {
-    // TODO: отображение страниц
 
     @GetMapping("/")
     public String homePage(Model model){
@@ -31,6 +30,6 @@ public class WebController {
 
     @GetMapping("/result")
     public String resultView(Model model){
-        return "simulation_result";
+        return "simulation_results";
     }
 }

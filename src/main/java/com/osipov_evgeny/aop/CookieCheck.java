@@ -13,9 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @Aspect
 public class CookieCheck {
-    // TODO: метод проверки авторизованности пользователя (возможно ли откидывать на регистрацию, если cookie пустует?)
 
-    private Cookie getCookieFromRequestOrReturnNull(){
+    private Cookie getCookieFromRequestOrReturnNull() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest();
         Cookie cookie = null;
@@ -28,36 +27,29 @@ public class CookieCheck {
         return cookie;
     }
 
-    @Around("PointcutContainer.allAccountControllerMethods() " +
-            "&& !PointcutContainer.logoutAccountController()")
-    public Object userIsAlreadyLoginCheck(ProceedingJoinPoint point) throws Throwable {
-        System.out.println("_acc----------------------_");
+    @Around("PointcutContainer.userIsAlreadyRegisteredOrLoggedIn()")
+    public String userIsAlreadyLoginCheck(ProceedingJoinPoint point) throws Throwable {
+        System.out.println(">>> userIsAlreadyLoginCheck ----------------------");
         Cookie cookie = getCookieFromRequestOrReturnNull();
         if (cookie != null) {
-            System.out.println(cookie.getName());
-            System.out.println(cookie.getValue());
+            System.out.println("INFO --- [userIsAlreadyLoginCheck]  User with id = " + cookie.getValue()
+                    + "trying auth again.");
+            return "redirect:/";
         } else {
-            System.out.println("Nope");
+            Object targetMethod = point.proceed();
+            return targetMethod.toString();
         }
-        System.out.println("_------_");
-        Object targetMethod = point.proceed();
-        System.out.println("_----------------------_");
-        return targetMethod;
     }
 
-    @Around("PointcutContainer.allSimulationControllerMethods() || PointcutContainer.logoutAccountController()")
-    public Object simulationControllerCheck(ProceedingJoinPoint point) throws Throwable {
-        System.out.println("_----------------------_");
+    @Around("PointcutContainer.userIsNotLoggedIn()")
+    public String userIsNotLoggedInCheck(ProceedingJoinPoint point) throws Throwable {
         Cookie cookie = getCookieFromRequestOrReturnNull();
         if (cookie != null) {
-            System.out.println(cookie.getName());
-            System.out.println(cookie.getValue());
+            Object targetMethod = point.proceed();
+            return targetMethod.toString();
         } else {
-            System.out.println("Nope");
+            System.out.println("INFO --- [userIsNotLoggedInCheck]  Anonymous user trying enter.");
+            return "redirect:/auth";
         }
-        System.out.println("_------_");
-        Object targetMethod = point.proceed();
-        System.out.println("_----------------------_");
-        return targetMethod;
     }
 }

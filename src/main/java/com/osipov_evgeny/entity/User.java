@@ -38,10 +38,6 @@ public class User {
         this.id = id;
     }
 
-    public void setCountGames(Integer countGames) {
-        this.countGames = countGames;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -60,6 +56,10 @@ public class User {
 
     public Integer getCountGames() {
         return countGames;
+    }
+
+    public void setCountGames(Integer countGames) {
+        this.countGames = countGames;
     }
 
     public Integer getLongestGame() {
