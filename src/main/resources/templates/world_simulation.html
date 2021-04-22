@@ -3,8 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Wild Wild West</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function display_perks() {
+            $.post(document.location + '/display').then(function (jsonGameRooms) {
+                $('#table').empty();
+                document.getElementById("table").value = "";
+                var txt = "<table border='1'><tr><td>ID</td><td>Profession</td><td>Age</td><td>Sex</td><td>Health</td><td>Marriage ID</td><td>Talent</td></td>";
+                JSON.parse(jsonGameRooms, function (key, value) {
+                    if (key === "id") {
+                        txt += "<tr>";
+                    }
+                    if (typeof value !== "object") {
+                        txt += "<td>" + value + "</td>";
+                    }
+                    if (key === "talent") {
+                        txt += "</tr>";
+                    }
+                });
+                txt += "</tr></table>"
+                document.getElementById("table").innerHTML = txt;
+            })
+
+        }
+        $(document).ready(display_perks())
+    </script>
 </head>
 <body>
-
+<div id="table"
+style="overflow: auto"></div>
 </body>
 </html>

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class AccountController {
     //    TODO: exception messages
-    //          cookie?
 
     @Autowired
     private final UserRepository userRepository;

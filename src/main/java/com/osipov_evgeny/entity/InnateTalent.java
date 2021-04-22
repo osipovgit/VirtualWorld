@@ -1,4 +1,4 @@
-package com.osipov_evgeny.entity.roles;
+package com.osipov_evgeny.entity;
 
 import java.util.Random;
 
@@ -9,7 +9,7 @@ public enum InnateTalent {
     MAFIA,
     SHERIFF;
 
-    public InnateTalent getRandomRole() {
+    public static InnateTalent getRandomRole() {
         return InnateTalent.values()[new Random().nextInt(InnateTalent.values().length)];
     }
 }
