@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Virtual World</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function logout() {
+            $.post('/logout').then(document.location = '/auth');
+        }
+    </script>
 </head>
 <body>
-
+<button type="submit" onclick="logout()">Logout</button>
 </body>
 </html>

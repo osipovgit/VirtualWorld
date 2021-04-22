@@ -1,6 +1,6 @@
 package com.osipov_evgeny.controller;
 
-import com.osipov_evgeny.repository.UserRepo;
+import com.osipov_evgeny.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +22,10 @@ public class SimulationController {
     // TODO: влияние пользователя на игру?
 
     @Autowired
-    private final UserRepo userRepo;
+    private final UserRepository userRepository;
 
-    public SimulationController(UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public SimulationController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @RequestMapping("/get_high_score_table")

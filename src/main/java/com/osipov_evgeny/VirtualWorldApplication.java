@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application {
+public class VirtualWorldApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(VirtualWorldApplication.class, args);
 
         // TODO: универсальный репо для игровых сущностей
         // TODO: добавить view, работа с данными через Model

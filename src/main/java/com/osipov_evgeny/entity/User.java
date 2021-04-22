@@ -30,6 +30,18 @@ public class User {
         this.countGames += 1;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setCountGames(Integer countGames) {
+        this.countGames = countGames;
+    }
+
     public String getUsername() {
         return username;
     }
