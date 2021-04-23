@@ -69,11 +69,11 @@ public class SimulationController {
         return playerCharacters.toString();
     }
 
-//    @RequestMapping("/get_high_score_table")
-//    public String getHighScoreTable(Model model){
-//
-//        return "?";
-//    }
+    @PostMapping("/next_year")
+    public String goToNextYear(HttpServletRequest request, Model model){
+
+        return "Something is happening and what is not clear...";
+    }
 
 //    @RequestMapping("/simulation")
 //    public String simulationView(Model model){

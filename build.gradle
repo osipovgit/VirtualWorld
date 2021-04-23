@@ -7,15 +7,20 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'application'
+plugins {
+    id 'java'
+    id 'idea'
+    id 'application'
+    id 'org.springframework.boot' version '2.3.10.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+
+}
+
+group = 'com.osipov_evgeny'
 
 bootJar {
-    baseName = 'virtual-world'
-    version = '2.0'
+    archiveBaseName.set('virtual-world')
+    archiveVersion.set('')
 }
 
 repositories {
@@ -26,9 +31,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    implementation('mysql:mysql-connector-java')
+    implementation('mysql:mysql-connector-java:8.0.24')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-    implementation('org.apache.logging.log4j:log4j-core')
+    implementation('org.apache.logging.log4j:log4j-core:2.14.1')
 }
