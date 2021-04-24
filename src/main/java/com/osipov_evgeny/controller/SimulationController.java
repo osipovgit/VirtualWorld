@@ -1,8 +1,10 @@
 package com.osipov_evgeny.controller;
 
 import com.osipov_evgeny.entity.PlayerCharacter;
+import com.osipov_evgeny.entity.SimulationSession;
 import com.osipov_evgeny.entity.User;
-import com.osipov_evgeny.repository.*;
+import com.osipov_evgeny.repository.PlayerCharacterRepository;
+import com.osipov_evgeny.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/simulation")
@@ -40,7 +43,7 @@ public class SimulationController {
         this.playerCharacterRepository = playerCharacterRepository;
     }
 
-    private User getUserFromCookie(HttpServletRequest request){
+    private User getUserFromCookie(HttpServletRequest request) {
         Cookie cookie = null;
         for (Cookie cookies : request.getCookies()) {
             if (cookies.getName().equals("user_id")) {
@@ -55,23 +58,54 @@ public class SimulationController {
         }
     }
 
+    private PlayerCharacter generateNewPlayerCharacter(User user, Integer generation) {
+        PlayerCharacter newPlayer = PlayerCharacter.generateRandomPlayerCharacter(user.getSimulationSession().getId(),
+                user.getSimulationSession().getNextNumberOfPlayerCharacter(), generation);
+        playerCharacterRepository.save(newPlayer);
+        userRepository.save(user);
+        return newPlayer;
+    }
+
+    private List<PlayerCharacter> initializePlayerCharacters(User user) {
+        List<PlayerCharacter> players = new ArrayList<>();
+        for (int i = 0; i < 5; ++i) {
+            PlayerCharacter playerCharacter = PlayerCharacter.generateRandomPlayerCharacter(user.getSimulationSession().getId(),
+                    user.getSimulationSession().getNextNumberOfPlayerCharacter(), 0);
+            playerCharacter.setAge(new Random().nextInt(playerCharacter.getDeadAge() - 3));
+            playerCharacter.setTalent(playerCharacter.getAge() / 5);
+            players.add(playerCharacter);
+            playerCharacterRepository.save(playerCharacter);
+        }
+        userRepository.save(user);
+        return players;
+    }
+
+    private PlayerCharacter changeHealth(PlayerCharacter player) {
+
+        return player;
+    }
+
     @PostMapping("/display")
-    public String initializeSimulationEntities(HttpServletRequest request, Model model) {
+    public String displaySimulationEntities(HttpServletRequest request, Model model) {
         User user = getUserFromCookie(request);
-        List<PlayerCharacter> playerCharacters = playerCharacterRepository.findAllByUserId(user.getId());
+        if (user.getSimulationSession() == null) {
+            user.setSimulationSession(new SimulationSession(user));
+            userRepository.save(user);
+            user = userRepository.findByUsername(user.getUsername());
+        }
+        List<PlayerCharacter> playerCharacters = playerCharacterRepository.findAllBySimulationSessionId(user.getSimulationSession().getId());
+        System.out.println("________________________");
+        System.out.println(playerCharacters.toString());
         if (playerCharacters.isEmpty()) {
-            for (int i = 0; i < 5; ++i) {
-                PlayerCharacter playerCharacter = PlayerCharacter.generateRandomPlayerCharacter(user.getId());
-                playerCharacters.add(playerCharacter);
-                playerCharacterRepository.save(playerCharacter);
-            }
+            playerCharacters = initializePlayerCharacters(user);
         }
         return playerCharacters.toString();
     }
 
     @PostMapping("/next_year")
-    public String goToNextYear(HttpServletRequest request, Model model){
-
+    public String goToNextYear(HttpServletRequest request, Model model) {
+        User user = getUserFromCookie(request);
+        generateNewPlayerCharacter(user, 0);
         return "Something is happening and what is not clear...";
     }
 

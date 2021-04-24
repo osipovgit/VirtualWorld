@@ -50,10 +50,10 @@ public class AccountController {
     }
 
     @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response, Model model){
+    public String logout(HttpServletRequest request, HttpServletResponse response, Model model){
         Cookie cookie = new Cookie("user_id", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-//        return "redirect:/auth";
+        return "redirect:/auth";
     }
 }

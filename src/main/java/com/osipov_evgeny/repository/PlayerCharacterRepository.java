@@ -13,16 +13,16 @@ public interface PlayerCharacterRepository extends JpaRepository<PlayerCharacter
     @Override
     PlayerCharacter getOne(Long id);
 
-    List<PlayerCharacter> findAllByUserId(Long userId);
+    List<PlayerCharacter> findAllBySimulationSessionId(Long simulationSessionId);
 
     @Modifying
     @Transactional
-    @Query(nativeQuery = true, value = "update players_character set age = age + 1 where user_id =:user_id")
-    void becomeAYearOlder(@Param("user_id") Long userId);
+    @Query(nativeQuery = true, value = "update players_character set age = age + 1 where simulation_session_id =:simulation_session_id")
+    void becomeAYearOlder(@Param("simulation_session_id") Long simulationSessionId);
 
     @Modifying
     @Transactional
-    void deleteAllByUserId(@Param("user_id") Long userId);
+    void deleteAllBySimulationSessionId(@Param("simulation_session_id") Long simulation_session_id);
 
     @Modifying
     @Transactional

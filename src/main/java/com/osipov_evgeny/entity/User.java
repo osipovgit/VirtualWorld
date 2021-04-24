@@ -9,10 +9,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
     private Integer countGames;
     private Integer longestGame;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "owner")
+    private SimulationSession simulationSession;
 
     public User() {
         this.countGames = 0;
@@ -70,27 +73,21 @@ public class User {
         this.longestGame = bestScore;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(countGames, user.countGames) && Objects.equals(longestGame, user.longestGame);
+    public SimulationSession getSimulationSession() {
+        return simulationSession;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, password, countGames, longestGame);
+    public void setSimulationSession(SimulationSession simulationSession) {
+        this.simulationSession = simulationSession;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", countGames=" + countGames +
-                ", longestGame=" + longestGame +
+        return "{" +
+                "\"id\"=\"" + id +
+                "\", \"username\"=\"" + username +
+                "\", \"countGames\"=" + countGames +
+                ", \"longestGame\"=" + longestGame +
                 '}';
     }
 }

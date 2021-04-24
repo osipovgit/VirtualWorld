@@ -1,7 +1,6 @@
 package com.osipov_evgeny.entity;
 
 import javax.persistence.*;
-import java.util.Objects;
 import java.util.Random;
 
 @Entity
@@ -10,10 +9,13 @@ public class PlayerCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long userId;
+    private Long serialNumber;
+    private Long simulationSessionId;
+    @Enumerated(EnumType.STRING)
     private InnateTalent profession;
     private Integer age;
     private Integer deadAge;
+    private Integer generation;
     private String sex;
     private Integer health;
     private Integer idMarriage;
@@ -22,13 +24,16 @@ public class PlayerCharacter {
     public PlayerCharacter() {
     }
 
-    public PlayerCharacter(Long userId, InnateTalent profession, Integer deadAge, String sex, Integer health) {
-        this.userId = userId;
+    public PlayerCharacter(Long simulationSessionId, Long serialNumber, InnateTalent profession, Integer generation) {
+        String[] randomSex = {"man", "woman"};
+        this.simulationSessionId = simulationSessionId;
+        this.serialNumber = serialNumber;
         this.profession = profession;
         this.age = 0;
-        this.deadAge = deadAge;
-        this.sex = sex;
-        this.health = health;
+        this.deadAge = new Random().nextInt(101) + 50;
+        this.generation = generation;
+        this.sex = randomSex[new Random().nextInt(2)];
+        this.health = new Random().nextInt(150);
         this.idMarriage = null;
         this.talent = 0;
     }
@@ -37,10 +42,8 @@ public class PlayerCharacter {
         this.age += 1;
     }
 
-    public static PlayerCharacter generateRandomPlayerCharacter(Long userId) {
-        String[] randomSex = {"man", "woman"};
-        return new PlayerCharacter(userId, InnateTalent.getRandomRole(), new Random().nextInt(150),
-                randomSex[new Random().nextInt(2)], new Random().nextInt(101) + 50);
+    public static PlayerCharacter generateRandomPlayerCharacter(Long simulationSessionId, Long serialNumber, Integer generation) {
+        return new PlayerCharacter(simulationSessionId, serialNumber, InnateTalent.getRandomRole(), generation);
     }
 
     public Long getId() {
@@ -52,12 +55,20 @@ public class PlayerCharacter {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getSerialNumber() {
+        return serialNumber;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setSerialNumber(Long serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public Long getSimulationSessionId() {
+        return simulationSessionId;
+    }
+
+    public void setSimulationSessionId(Long simulationSessionId) {
+        this.simulationSessionId = simulationSessionId;
     }
 
     public InnateTalent getProfession() {
@@ -82,6 +93,14 @@ public class PlayerCharacter {
 
     public void setDeadAge(Integer deadAge) {
         this.deadAge = deadAge;
+    }
+
+    public Integer getGeneration() {
+        return generation;
+    }
+
+    public void setGeneration(Integer generation) {
+        this.generation = generation;
     }
 
     public String getSex() {
@@ -117,27 +136,14 @@ public class PlayerCharacter {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PlayerCharacter that = (PlayerCharacter) o;
-        return Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && profession == that.profession && Objects.equals(age, that.age) && Objects.equals(deadAge, that.deadAge) && Objects.equals(sex, that.sex) && Objects.equals(health, that.health) && Objects.equals(idMarriage, that.idMarriage) && Objects.equals(talent, that.talent);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, profession, age, deadAge, sex, health, idMarriage, talent);
-    }
-
-    @Override
     public String toString() {
-        return "{\"id\":" + id +
-                ", \"profession\":\"" + profession +
-                "\", \"age\":" + age +
-                ", \"sex\":\"" + sex + '\"' +
-                ", \"health\":" + health +
-                ", \"idMarriage\":\"" + idMarriage +
-                "\", \"talent\":" + talent +
-                '}';
+        return "{\"id\":\"" + serialNumber +
+                "\", \"profession\":\"" + profession +
+                "\", \"age\":\"" + age +
+                "\", \"generation\":\"" + generation +
+                "\", \"sex\":\"" + sex +
+                "\", \"health\":\"" + health +
+                "\", \"idMarriage\":\"" + idMarriage +
+                "\", \"talent\":\"" + talent + "\"}";
     }
 }

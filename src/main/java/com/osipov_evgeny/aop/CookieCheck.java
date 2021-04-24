@@ -33,7 +33,7 @@ public class CookieCheck {
         Cookie cookie = getCookieFromRequestOrReturnNull();
         if (cookie != null) {
             System.out.println("INFO --- [userIsAlreadyLoginCheck]  User with id = " + cookie.getValue()
-                    + "trying auth again.");
+                    + " trying auth again.");
             return "redirect:/";
         } else {
             Object targetMethod = point.proceed();

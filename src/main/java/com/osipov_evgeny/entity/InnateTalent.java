@@ -6,7 +6,7 @@ public enum InnateTalent {
     CIVILIAN,
     DOCTOR,
     FARMER,
-    MAFIA,
+    CRIMINAL,
     SHERIFF;
 
     public static InnateTalent getRandomRole() {

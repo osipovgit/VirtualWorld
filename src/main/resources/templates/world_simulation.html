@@ -30,7 +30,7 @@
             $.post(documentLocation + '/display').then(function (jsonGameRooms) {
                 $('#table').empty();
                 document.getElementById("table").value = "";
-                var txt = "<table border='1'><tr><td>ID</td><td>Profession</td><td>Age</td><td>Sex</td><td>Health</td><td>Marriage ID</td><td>Talent</td></td>";
+                var txt = "<table border='1'><tr><td>ID</td><td>Profession</td><td>Age</td><td>Generation</td><td>Sex</td><td>Health</td><td>Marriage ID</td><td>Talent</td></td>";
                 JSON.parse(jsonGameRooms, function (key, value) {
                     if (key === "id") {
                         txt += "<tr>";
