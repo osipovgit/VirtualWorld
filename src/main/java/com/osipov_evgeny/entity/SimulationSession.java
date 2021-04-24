@@ -1,6 +1,7 @@
 package com.osipov_evgeny.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "simulation_sessions")
@@ -13,6 +14,8 @@ public class SimulationSession {
     private User owner;
     private Long numberOfPlayerCharacters;
     private Long foodSupplies;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "simulationSessionId")
+    private List<PlayerCharacter> playerCharacter;
 
     public SimulationSession() {
         this.numberOfPlayerCharacters = 0L;
@@ -62,13 +65,21 @@ public class SimulationSession {
         this.foodSupplies = foodSupplies;
     }
 
+    public List<PlayerCharacter> getPlayerCharacter() {
+        return playerCharacter;
+    }
+
+    public void setPlayerCharacter(List<PlayerCharacter> playerCharacter) {
+        this.playerCharacter = playerCharacter;
+    }
+
     @Override
     public String toString() {
         return "SimulationSession{" +
-                "id=" + id +
-                ", owner=" + owner +
+                "owner=" + owner +
                 ", numberOfPlayerCharacters=" + numberOfPlayerCharacters +
                 ", foodSupplies=" + foodSupplies +
+                ", playerCharacter=" + playerCharacter +
                 '}';
     }
 }

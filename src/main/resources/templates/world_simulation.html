@@ -1,21 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Simulation is running!</title>
+
+<!--    <link rel="stylesheet" type="text/css" href="css/button.css"/>-->
+
     <style>
+        /*@import "css/button.css";*/
+
         p {
             font-size: 20px;
         }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+        }
+
         td {
             text-align: center;
             height: 23px;
             width: 90px
         }
-    </style>
 
+        tr:hover {background-color: #86ff7e;}
+        tr:nth-child(even) {background-color: #bbffbb;}
+
+        .table {
+            float: left;
+            width: 70%;
+            height: 69vh;
+            padding-bottom: 1vh;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+
+        .options {
+            width: 30%; /* Ширина слоя */
+            height: 69vh;
+            padding-bottom: 1vh;
+            float: left; /* Обтекание по правому краю */
+            overflow: auto
+        }
+
+        .messages {
+            background-color: #e9e9e9;
+            clear: both; /* Отмена обтекания */
+            height: 27vh;
+            float: top;
+            overflow: auto;
+            top: 70vh;
+        }
+
+        .button {
+            display: inline-block;
+            border-radius: 4px;
+            background-color: limegreen;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 16px;
+            padding: 12px;
+            width: 170px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+
+        .button:hover span {
+            padding-right: 25px;
+        }
+
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<!--    <script type="text/javascript" src="js/world_simulation.js"></script>-->
+    <!--    <script type="text/javascript" src="js/world_simulation.js"></script>-->
     <script type="text/javascript">
         function goToNextYear(documentLocation) {
             $.post(documentLocation + '/next_year').then(function (data) {
@@ -27,11 +105,11 @@
         }
 
         function displayPerks(documentLocation) {
-            $.post(documentLocation + '/display').then(function (jsonGameRooms) {
+            $.post(documentLocation + '/display').then(function (jsonPerksTable) {
                 $('#table').empty();
                 document.getElementById("table").value = "";
-                var txt = "<table border='1'><tr><td>ID</td><td>Profession</td><td>Age</td><td>Generation</td><td>Sex</td><td>Health</td><td>Marriage ID</td><td>Talent</td></td>";
-                JSON.parse(jsonGameRooms, function (key, value) {
+                var txt = "<table style='border-collapse: collapse'><tr style='background-color: limegreen; color: white'><td>ID</td><td>Profession</td><td>Age</td><td>Generation</td><td>Sex</td><td>Health</td><td>Marriage ID</td><td>Talent</td></td>";
+                JSON.parse(jsonPerksTable, function (key, value) {
                     if (key === "id") {
                         txt += "<tr>";
                     }
@@ -52,12 +130,33 @@
     </script>
 </head>
 <body>
-<div id="table" style="overflow: auto"></div>
+<div>
+    <div id="table" class="table"></div>
 
-<br><br>
+    <div class="options">
+        <button class="button" onclick="goToNextYear(document.location)" style="vertical-align:middle"><span>Go to next year </span></button>
+    </div>
+</div>
 
-<input type="submit" onclick="goToNextYear(document.location)" value="-> Go to next year ->">
-
-<div id="events" style="overflow: auto"></div>
+<div class="messages">
+    <div id="events" style="overflow: auto">
+        <div>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+            <p>wef</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>

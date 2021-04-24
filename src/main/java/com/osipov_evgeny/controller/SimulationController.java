@@ -59,7 +59,7 @@ public class SimulationController {
     }
 
     private PlayerCharacter generateNewPlayerCharacter(User user, Integer generation) {
-        PlayerCharacter newPlayer = PlayerCharacter.generateRandomPlayerCharacter(user.getSimulationSession().getId(),
+        PlayerCharacter newPlayer = PlayerCharacter.generateRandomPlayerCharacter(user.getSimulationSession(),
                 user.getSimulationSession().getNextNumberOfPlayerCharacter(), generation);
         playerCharacterRepository.save(newPlayer);
         userRepository.save(user);
@@ -69,7 +69,7 @@ public class SimulationController {
     private List<PlayerCharacter> initializePlayerCharacters(User user) {
         List<PlayerCharacter> players = new ArrayList<>();
         for (int i = 0; i < 5; ++i) {
-            PlayerCharacter playerCharacter = PlayerCharacter.generateRandomPlayerCharacter(user.getSimulationSession().getId(),
+            PlayerCharacter playerCharacter = PlayerCharacter.generateRandomPlayerCharacter(user.getSimulationSession(),
                     user.getSimulationSession().getNextNumberOfPlayerCharacter(), 0);
             playerCharacter.setAge(new Random().nextInt(playerCharacter.getDeadAge() - 3));
             playerCharacter.setTalent(playerCharacter.getAge() / 5);
@@ -93,9 +93,8 @@ public class SimulationController {
             userRepository.save(user);
             user = userRepository.findByUsername(user.getUsername());
         }
-        List<PlayerCharacter> playerCharacters = playerCharacterRepository.findAllBySimulationSessionId(user.getSimulationSession().getId());
-        System.out.println("________________________");
-        System.out.println(playerCharacters.toString());
+
+        List<PlayerCharacter> playerCharacters = playerCharacterRepository.findAllBySimulationSessionId(user.getSimulationSession());
         if (playerCharacters.isEmpty()) {
             playerCharacters = initializePlayerCharacters(user);
         }
@@ -108,14 +107,4 @@ public class SimulationController {
         generateNewPlayerCharacter(user, 0);
         return "Something is happening and what is not clear...";
     }
-
-//    @RequestMapping("/simulation")
-//    public String simulationView(Model model){
-//        return "world_simulation";
-//    }
-//
-//    @RequestMapping("/result")
-//    public String resultView(Model model){
-//        return "simulation_result";
-//    }
 }

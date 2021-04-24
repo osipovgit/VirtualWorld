@@ -10,7 +10,9 @@ public class PlayerCharacter {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long serialNumber;
-    private Long simulationSessionId;
+    @ManyToOne
+    @JoinColumn(name = "simulationSessionId")
+    private SimulationSession simulationSessionId;
     @Enumerated(EnumType.STRING)
     private InnateTalent profession;
     private Integer age;
@@ -24,7 +26,7 @@ public class PlayerCharacter {
     public PlayerCharacter() {
     }
 
-    public PlayerCharacter(Long simulationSessionId, Long serialNumber, InnateTalent profession, Integer generation) {
+    public PlayerCharacter(SimulationSession simulationSessionId, Long serialNumber, InnateTalent profession, Integer generation) {
         String[] randomSex = {"man", "woman"};
         this.simulationSessionId = simulationSessionId;
         this.serialNumber = serialNumber;
@@ -42,7 +44,7 @@ public class PlayerCharacter {
         this.age += 1;
     }
 
-    public static PlayerCharacter generateRandomPlayerCharacter(Long simulationSessionId, Long serialNumber, Integer generation) {
+    public static PlayerCharacter generateRandomPlayerCharacter(SimulationSession simulationSessionId, Long serialNumber, Integer generation) {
         return new PlayerCharacter(simulationSessionId, serialNumber, InnateTalent.getRandomRole(), generation);
     }
 
@@ -63,11 +65,11 @@ public class PlayerCharacter {
         this.serialNumber = serialNumber;
     }
 
-    public Long getSimulationSessionId() {
+    public SimulationSession getSimulationSessionId() {
         return simulationSessionId;
     }
 
-    public void setSimulationSessionId(Long simulationSessionId) {
+    public void setSimulationSessionId(SimulationSession simulationSessionId) {
         this.simulationSessionId = simulationSessionId;
     }
 
