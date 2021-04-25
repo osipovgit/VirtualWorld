@@ -1,5 +1,6 @@
 package com.osipov_evgeny.repository;
 
+import com.osipov_evgeny.entity.InnateTalent;
 import com.osipov_evgeny.entity.PlayerCharacter;
 import com.osipov_evgeny.entity.SimulationSession;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,10 +19,15 @@ public interface PlayerCharacterRepository extends JpaRepository<PlayerCharacter
 
     @Modifying
     @Transactional
-    @Query(nativeQuery = true, value = "update players_character set age = age + 1 where simulation_session_id =:simulation_session_id")
+    @Query(nativeQuery = true, value = "update player_characters set age = age + 1 where simulation_session_id =:simulation_session_id")
     void becomeAYearOlder(@Param("simulation_session_id") SimulationSession simulationSessionId);
 
     @Modifying
     @Transactional
     void deleteAllBySimulationSessionId(@Param("simulation_session_id") SimulationSession simulation_session_id);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true, value = "delete from player_characters where profession = :profession and simulation_session_id =:simulationSessionId")
+    void deleteAllByProfessionAndSessionId(@Param("profession") String profession, @Param("simulationSessionId") Long simulationSessionId);
 }

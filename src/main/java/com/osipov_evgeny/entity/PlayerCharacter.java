@@ -1,10 +1,11 @@
 package com.osipov_evgeny.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Random;
 
 @Entity
-@Table(name = "players_character")
+@Table(name = "player_characters")
 public class PlayerCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,15 +23,25 @@ public class PlayerCharacter {
     private Integer health;
     private Integer idMarriage;
     private Integer talent;
+    private Integer specialAction;
 
     public PlayerCharacter() {
+        String[] randomSex = {"man", "woman"};
+        this.profession = InnateTalent.VILLAGER;
+        this.age = 0;
+        this.deadAge = new Random().nextInt(101) + 50;
+        this.sex = randomSex[new Random().nextInt(2)];
+        this.health = new Random().nextInt(150);
+        this.idMarriage = null;
+        this.talent = 0;
+        this.specialAction = 0;
     }
 
-    public PlayerCharacter(SimulationSession simulationSessionId, Long serialNumber, InnateTalent profession, Integer generation) {
+    public PlayerCharacter(SimulationSession simulationSessionId, Long serialNumber, Integer generation) {
         String[] randomSex = {"man", "woman"};
         this.simulationSessionId = simulationSessionId;
         this.serialNumber = serialNumber;
-        this.profession = profession;
+        this.profession = InnateTalent.VILLAGER;
         this.age = 0;
         this.deadAge = new Random().nextInt(101) + 50;
         this.generation = generation;
@@ -38,14 +49,11 @@ public class PlayerCharacter {
         this.health = new Random().nextInt(150);
         this.idMarriage = null;
         this.talent = 0;
+        this.specialAction = 0;
     }
 
     public void becomeAYearOlder(Integer age) {
         this.age += 1;
-    }
-
-    public static PlayerCharacter generateRandomPlayerCharacter(SimulationSession simulationSessionId, Long serialNumber, Integer generation) {
-        return new PlayerCharacter(simulationSessionId, serialNumber, InnateTalent.getRandomRole(), generation);
     }
 
     public Long getId() {
@@ -137,6 +145,27 @@ public class PlayerCharacter {
         this.talent = talent;
     }
 
+    public Integer getSpecialAction() {
+        return specialAction;
+    }
+
+    public void setSpecialAction(Integer specialAction) {
+        this.specialAction = specialAction;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerCharacter that = (PlayerCharacter) o;
+        return Objects.equals(id, that.id) && Objects.equals(serialNumber, that.serialNumber) && Objects.equals(simulationSessionId, that.simulationSessionId) && profession == that.profession && Objects.equals(age, that.age) && Objects.equals(deadAge, that.deadAge) && Objects.equals(generation, that.generation) && Objects.equals(sex, that.sex) && Objects.equals(health, that.health) && Objects.equals(idMarriage, that.idMarriage) && Objects.equals(talent, that.talent) && Objects.equals(specialAction, that.specialAction);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, serialNumber, simulationSessionId, profession, age, deadAge, generation, sex, health, idMarriage, talent, specialAction);
+    }
+
     @Override
     public String toString() {
         return "{\"id\":\"" + serialNumber +
@@ -145,7 +174,7 @@ public class PlayerCharacter {
                 "\", \"generation\":\"" + generation +
                 "\", \"sex\":\"" + sex +
                 "\", \"health\":\"" + health +
-                "\", \"idMarriage\":\"" + idMarriage +
+                "\", \"idMarriage\":\"" + (idMarriage == null ? '-' : idMarriage) +
                 "\", \"talent\":\"" + talent +
                 "\", \"pc_id\":\"" + id + "\"}";
     }

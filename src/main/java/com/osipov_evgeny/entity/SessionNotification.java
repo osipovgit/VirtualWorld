@@ -47,9 +47,7 @@ public class SessionNotification {
 
     @Override
     public String toString() {
-        return "SessionNotification{" +
-                "sessionId=" + sessionId +
-                ", notification='" + notification + '\'' +
-                '}';
+        return "{" +
+                "\"Notification\":\"" + notification + "\"}";
     }
 }

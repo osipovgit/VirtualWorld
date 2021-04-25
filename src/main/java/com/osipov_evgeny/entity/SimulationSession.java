@@ -10,29 +10,45 @@ public class SimulationSession {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToOne
-    @JoinColumn(name = "owner")
+    @JoinColumn(name = "owner", unique = true)
     private User owner;
-    private Long numberOfPlayerCharacters;
+    private Integer year;
+    private Long numberOfNextPlayerCharacters;
     private Long foodSupplies;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "simulationSessionId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "simulationSessionId", fetch = FetchType.EAGER)
     private List<PlayerCharacter> playerCharacter;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sessionId")
     private List<SessionNotification> notifications;
 
     public SimulationSession() {
-        this.numberOfPlayerCharacters = 0L;
+        this.year = 0;
+        this.numberOfNextPlayerCharacters = 0L;
         this.foodSupplies = 45L;
     }
 
     public SimulationSession(User owner) {
         this.owner = owner;
-        this.numberOfPlayerCharacters = 0L;
+        this.year = 0;
+        this.numberOfNextPlayerCharacters = 0L;
         this.foodSupplies = 45L;
     }
 
     public Long getNextNumberOfPlayerCharacter() {
-        this.numberOfPlayerCharacters += 1;
-        return numberOfPlayerCharacters;
+        this.numberOfNextPlayerCharacters += 1;
+        return numberOfNextPlayerCharacters;
+    }
+
+    public Integer getNextYear() {
+        this.year += 1;
+        return year;
+    }
+
+    public Boolean checkIfAllCasesHaveBeenCompleted() {
+        Integer sumAllSpecialAction = 0;
+        for (PlayerCharacter player: playerCharacter) {
+            sumAllSpecialAction += player.getSpecialAction();
+        }
+        return (sumAllSpecialAction == 0);
     }
 
     public Long getId() {
@@ -51,12 +67,20 @@ public class SimulationSession {
         this.owner = owner;
     }
 
-    public Long getNumberOfPlayerCharacters() {
-        return numberOfPlayerCharacters;
+    public Long getNumberOfNextPlayerCharacters() {
+        return numberOfNextPlayerCharacters;
     }
 
-    public void setNumberOfPlayerCharacters(Long numberOfPlayerCharacters) {
-        this.numberOfPlayerCharacters = numberOfPlayerCharacters;
+    public void setNumberOfNextPlayerCharacters(Long numberOfPlayerCharacters) {
+        this.numberOfNextPlayerCharacters = numberOfPlayerCharacters;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Long getFoodSupplies() {
@@ -87,7 +111,8 @@ public class SimulationSession {
     public String toString() {
         return "SimulationSession{" +
                 "owner=" + owner +
-                ", numberOfPlayerCharacters=" + numberOfPlayerCharacters +
+                ", year=" + year +
+                ", numberOfPlayerCharacters=" + numberOfNextPlayerCharacters +
                 ", foodSupplies=" + foodSupplies +
                 ", playerCharacter=" + playerCharacter +
                 ", notifications=" + notifications +

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Simulation is running!</title>
@@ -15,29 +15,21 @@
 <div>
     <div class="table" id="table"></div>
 
-    <div class="options" id="next-year">
-        <button class="button-next" onclick="goToNextYear(document.location)"><span>Go to next year </span></button>
+    <div class="options">
+        <div id="next-year-button"></div>
+        <button class="button-out" type="submit" onclick="document.location = '/'"><span>Take a break</span></button>
+        <div id="year" style="overflow: auto; clear: both;">
+
+        </div>
+        <div id="actions" style="overflow: auto;">
+
+        </div>
     </div>
 </div>
 
 <div class="messages">
-    <div id="events">
-        <div>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-            <p>message</p>
-        </div>
+    <div id="events" style="">
+
     </div>
 </div>
 </body>

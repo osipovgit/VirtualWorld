@@ -39,6 +39,49 @@
     right: 0;
 }
 
+
+.button-enter {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: limegreen;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    padding: 12px;
+    width: 170px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-enter span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-enter span:after {
+    content: '\27AA';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-enter:hover span {
+    padding-right: 25px;
+}
+
+.button-enter:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
 .button-heal {
     display: inline-block;
     border-radius: 4px;
@@ -105,7 +148,7 @@
 }
 
 .button-out span:after {
-    content: '✖';
+    content: '\2716';
     position: absolute;
     opacity: 0;
     top: 0;
@@ -115,6 +158,11 @@
 
 .button-out:hover span {
     padding-right: 25px;
+}
+
+.button-out:hover span:after {
+    opacity: 1;
+    right: 0;
 }
 
 

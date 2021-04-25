@@ -1,25 +1,53 @@
 function goToNextYear(documentLocation) {
     $.post(documentLocation + '/next_year').then(function (data) {
+        if (data === "Wait until you\'ve, finished") {
+            alert(data);
+        }
+        getMessages()
         displayPerks(documentLocation)
-        var text = "<p>"
-        text += data + "</p>"
+    })
+}
+
+function getMessages() {
+    $.post(document.location + '/get_messages').then(function (data) {
+        var text = ""
+        JSON.parse(data, function (key, value) {
+            if (key === "Notification") {
+                text += "<p>" + value + "</p>";
+            }
+        });
         document.getElementById("events").innerHTML = text;
+
     })
 }
 
 function raiseHealth(id) {
-    alert(id);
+    $.post(document.location + '/raise_health', {"id": id}).then(function (data){
+        if (data !== "") {
+            alert(data)
+        }
+        displayPerks(document.location)
+        getCurrentYear()
+        getMessages()
+    })
+}
+
+function getCurrentYear() {
+    $.post(document.location + '/get_current_year').then(function (data) {
+        document.getElementById("year").innerHTML = "<h3>Now: " + data + " year</h3>";
+
+    })
 }
 
 function checkingAllActions() {
     $.post(document.location + '/checking_all_actions').then(function (data) {
         if (data === "true") {
-            var txt = "<button class='button-next' onClick='goToNextYear(document.location)'>"
+            var txt = "<button class='button-next' onClick='goToNextYear(document.location)' style='float: left'>"
                 + "<span>Go to next year </span></button>";
         } else {
-            var txt = "<button disabled class='button-disabled'>Wait until you've, finished</button>";
+            var txt = "<button disabled class='button-disabled' style='float: left'>Wait until you've, finished</button>";
         }
-        document.getElementById("next-year").innerHTML = txt;
+        document.getElementById("next-year-button").innerHTML = txt;
     })
 }
 
@@ -49,10 +77,11 @@ function displayPerks(documentLocation) {
         txt += "</tr></table>"
         document.getElementById("table").innerHTML = txt;
     })
-
+    checkingAllActions();
+    getCurrentYear();
 }
 
 $(document).ready(function () {
     displayPerks(document.location);
-    checkingAllActions();
+    getMessages();
 })

@@ -39,7 +39,6 @@ public class AccountController {
     @PostMapping("/join")
     public String registration(User user, HttpServletResponse response, Model model) {
         User userFromDatabase = userRepository.findByUsername(user.getUsername());
-        System.out.println(user);
         if (userFromDatabase == null) {
             userRepository.save(user);
             user = userRepository.findByUsername(user.getUsername());

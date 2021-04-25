@@ -1,15 +1,21 @@
 package com.osipov_evgeny.entity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public enum InnateTalent {
-    CIVILIAN,
-    DOCTOR,
+    VILLAGER,
     FARMER,
+    DOCTOR,
+    SHERIFF,
     CRIMINAL,
-    SHERIFF;
+    PRISONER,
+    CAUGHT,
+    DEAD;
 
     public static InnateTalent getRandomRole() {
-        return InnateTalent.values()[new Random().nextInt(InnateTalent.values().length)];
+        return new ArrayList<>(Arrays.asList(VILLAGER, FARMER, DOCTOR, SHERIFF, CRIMINAL))
+                .get(new Random().nextInt(InnateTalent.values().length - 3));
     }
 }
