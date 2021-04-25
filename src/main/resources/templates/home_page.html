@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Virtual World</title>
+
+    <link rel="stylesheet" type="text/css" href="css/buttons.css"/>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        function logout() {
-            $.post('/logout').then(document.location = '/auth');
-        }
-    </script>
+    <script type="text/javascript" src="js/home.js"></script>
+
 </head>
 <body>
-<button type="submit" onclick="logout()">Logout</button>
+<button class="button-out" type="submit" onclick="logout()"><span>Logout</span></button>
 <br><br>
-<button type="submit" onclick="document.location.href='/simulation'">Start simulation</button>
+<button class="button-next" type="submit" onclick="document.location.href='/simulation'"><span>Start simulation</span></button>
 </body>
 </html>

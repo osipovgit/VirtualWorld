@@ -101,6 +101,18 @@ public class SimulationController {
         return playerCharacters.toString();
     }
 
+    @PostMapping("/checking_all_actions")
+    public String checkingAllActions(HttpServletRequest request, Model model) {
+        // TODO: прописать условие (флаг/счетчики в SimulationSession?)
+//        User user = getUserFromCookie(request);
+//        if (user.getSimulationSession() == null) {
+//            user.setSimulationSession(new SimulationSession(user));
+//            userRepository.save(user);
+//            user = userRepository.findByUsername(user.getUsername());
+//        }
+        return "false";
+    }
+
     @PostMapping("/next_year")
     public String goToNextYear(HttpServletRequest request, Model model) {
         User user = getUserFromCookie(request);

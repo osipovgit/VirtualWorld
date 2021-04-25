@@ -146,6 +146,7 @@ public class PlayerCharacter {
                 "\", \"sex\":\"" + sex +
                 "\", \"health\":\"" + health +
                 "\", \"idMarriage\":\"" + idMarriage +
-                "\", \"talent\":\"" + talent + "\"}";
+                "\", \"talent\":\"" + talent +
+                "\", \"pc_id\":\"" + id + "\"}";
     }
 }

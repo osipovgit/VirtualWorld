@@ -16,6 +16,8 @@ public class SimulationSession {
     private Long foodSupplies;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "simulationSessionId")
     private List<PlayerCharacter> playerCharacter;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sessionId")
+    private List<SessionNotification> notifications;
 
     public SimulationSession() {
         this.numberOfPlayerCharacters = 0L;
@@ -73,6 +75,14 @@ public class SimulationSession {
         this.playerCharacter = playerCharacter;
     }
 
+    public List<SessionNotification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<SessionNotification> notifications) {
+        this.notifications = notifications;
+    }
+
     @Override
     public String toString() {
         return "SimulationSession{" +
@@ -80,6 +90,7 @@ public class SimulationSession {
                 ", numberOfPlayerCharacters=" + numberOfPlayerCharacters +
                 ", foodSupplies=" + foodSupplies +
                 ", playerCharacter=" + playerCharacter +
+                ", notifications=" + notifications +
                 '}';
     }
 }

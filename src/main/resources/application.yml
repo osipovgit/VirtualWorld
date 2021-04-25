@@ -16,3 +16,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  resources:
+    static-locations: [classpath:/resources/, classpath:/static/]
+    chain:
+      strategy:
+        content:
+          paths: /**
+          enabled: true
