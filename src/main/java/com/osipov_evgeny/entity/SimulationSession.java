@@ -1,6 +1,7 @@
 package com.osipov_evgeny.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,9 +39,20 @@ public class SimulationSession {
         return numberOfNextPlayerCharacters;
     }
 
-    public Integer getNextYear() {
+    public void nextYear() {
         this.year += 1;
-        return year;
+        for (PlayerCharacter player: playerCharacter) {
+            player.setAge(player.getAge() + 1);
+        }    }
+
+    public List<PlayerCharacter> getAllDEAD() {
+        List<PlayerCharacter> players = new ArrayList<>();
+        for (PlayerCharacter player: playerCharacter) {
+            if (player.getProfession() == InnateTalent.DEAD) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     public Boolean checkIfAllCasesHaveBeenCompleted() {

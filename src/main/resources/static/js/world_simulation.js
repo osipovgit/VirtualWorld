@@ -1,10 +1,23 @@
 function goToNextYear(documentLocation) {
     $.post(documentLocation + '/next_year').then(function (data) {
         if (data === "Wait until you\'ve, finished") {
-            alert(data);
+            swal({
+                title: "Oops",
+                text: data,
+                icon: "warning",
+                button: "I got it!",
+            })
+        } else if (data !== "") {
+            swal({
+                title: "All villagers of simulation died.",
+                text: data,
+                icon: "success",
+                button: "Try again!",
+            }).then(function (response) {document.location = '/'});
+        } else {
+            getMessages()
+            displayPerks(documentLocation)
         }
-        getMessages()
-        displayPerks(documentLocation)
     })
 }
 
@@ -24,7 +37,12 @@ function getMessages() {
 function raiseHealth(id) {
     $.post(document.location + '/raise_health', {"id": id}).then(function (data){
         if (data !== "") {
-            alert(data)
+            swal({
+                title: "Go to next year!",
+                text: data,
+                icon: "error",
+                button: "I got it!",
+            })
         }
         displayPerks(document.location)
         getCurrentYear()
@@ -76,12 +94,15 @@ function displayPerks(documentLocation) {
         });
         txt += "</tr></table>"
         document.getElementById("table").innerHTML = txt;
+        checkingAllActions();
+        getCurrentYear();
+        getMessages();
     })
-    checkingAllActions();
-    getCurrentYear();
 }
 
 $(document).ready(function () {
     displayPerks(document.location);
+    checkingAllActions();
+    getCurrentYear();
     getMessages();
 })
