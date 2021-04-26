@@ -55,12 +55,16 @@ public class SimulationSession {
         return players;
     }
 
-    public Boolean checkIfAllCasesHaveBeenCompleted() {
+    public Integer countOfUnfinishedTasks() {
         Integer sumAllSpecialAction = 0;
         for (PlayerCharacter player: playerCharacter) {
             sumAllSpecialAction += player.getSpecialAction();
         }
-        return (sumAllSpecialAction == 0);
+        return sumAllSpecialAction;
+    }
+
+    public Boolean checkIfAllCasesHaveBeenCompleted() {
+        return (countOfUnfinishedTasks() == 0);
     }
 
     public Long getId() {

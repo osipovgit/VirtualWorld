@@ -29,10 +29,13 @@ public class SimulationController {
              приход новых жителей в поселение?
      */
     // TODO: улучшенный баланс
-    // TODO: влияние пользователя на игру?
 
-    private static final Integer heal = 10;
-    private static final Integer food = 10;
+    private static final Integer heal = 10;     // heal + doctor.getTalent()
+    private static final Integer food = 10;     // food + farmer.getTalent()
+    private static final Integer damage = 10;     // damage + criminal.getTalent()
+    private static final Integer lowerToKill = 1;   // (randomValue < lowerToKill)   -> kill
+    private static final Integer upperToDamage = 4; // (randomValue > upperToDamage) -> damage []
+    private static final Integer upperBoundOfRandomValue = 10; // [0, upperBound) of randomValue
 
     @Autowired
     private final UserRepository userRepository;
@@ -91,17 +94,40 @@ public class SimulationController {
         return players;
     }
 
-    public void sheriffIsLookingForACriminal(List<PlayerCharacter> playerCharacters, PlayerCharacter player, User user) {
-        playerCharacters.remove(player);
-        int randomIndex = new Random().nextInt(playerCharacters.size());
-        if (playerCharacters.get(randomIndex).getProfession() == InnateTalent.CRIMINAL) {
-            playerCharacters.get(randomIndex).setProfession(InnateTalent.CAUGHT);
-            notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                    user.getSimulationSession().getYear() + "y.  | Sheriff caught criminal with ID: "
-                            + playerCharacters.get(randomIndex).getSerialNumber()));
-            playerCharacterRepository.save(playerCharacters.get(randomIndex));
+    public void criminalIsDoingSomethingBad (List<PlayerCharacter> playerCharacters, PlayerCharacter player, User user) {
+        playerCharacters.remove(player);    // удаляем самого преступника из списка
+        int randomIndex = new Random().nextInt(playerCharacters.size()); // получаем случайную жертву
+        if (playerCharacters.get(randomIndex).getProfession() != InnateTalent.CAUGHT
+                && playerCharacters.get(randomIndex).getProfession() != InnateTalent.PRISONER
+                && playerCharacters.get(randomIndex).getProfession() != InnateTalent.DEAD) {
+            PlayerCharacter randomPlayer = playerCharacters.get(randomIndex);
+            int randomValue = new Random().nextInt(upperBoundOfRandomValue);
+            if (randomValue < lowerToKill) {
+                notificationRepository.save(new SessionNotification(user.getSimulationSession(),
+                        user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                                + " killed " + randomPlayer.getAge() + " year old " + randomPlayer.getProfession()));
+                randomPlayer.setProfession(InnateTalent.DEAD);
+                playerCharacterRepository.save(randomPlayer);
+            } else if (randomValue > upperToDamage) {
+                randomPlayer.setHealth(randomPlayer.getHealth() - (damage + randomPlayer.getTalent()));
+                notificationRepository.save(new SessionNotification(user.getSimulationSession(),
+                        user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                                + " deals " + (damage + randomPlayer.getTalent()) + " damage to "
+                                + randomPlayer.getAge() + " year old " + randomPlayer.getProfession()));
+            }   // иначе преступник ничего не делает
         }
-        playerCharacters.add(player);
+    }
+
+    public void sheriffIsLookingForACriminal (List<PlayerCharacter> playerCharacters, PlayerCharacter player, User user) {
+        playerCharacters.remove(player); // удаляем самого шерифа из списка
+        int randomIndex = new Random().nextInt(playerCharacters.size()); // получаем случайного персонажа
+        if (playerCharacters.get(randomIndex).getProfession() == InnateTalent.CRIMINAL) { // проверяем его роль
+            playerCharacters.get(randomIndex).setProfession(InnateTalent.CAUGHT); // роль "пойман" (далее решает юзер)
+            notificationRepository.save(new SessionNotification(user.getSimulationSession(),
+                    user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                            + " caught criminal with ID: " + playerCharacters.get(randomIndex).getSerialNumber()));
+            playerCharacterRepository.save(playerCharacters.get(randomIndex)); // сохраняем персонажа с новой ролью
+        }
     }
 
     @PostMapping("/display")
@@ -120,15 +146,17 @@ public class SimulationController {
         return playerCharacters.toString();
     }
 
-    @PostMapping("/get_current_year")
+    @PostMapping("/get_current_state")
     public String findOutTheCurrentYear(HttpServletRequest request, Model model) {
-        return getUserFromCookie(request).getSimulationSession().getYear().toString();
+        User user = getUserFromCookie(request);
+        return "{\"Year\": " + user.getSimulationSession().getYear().toString()
+                + ", \"Doctor's visits\": " + user.getSimulationSession().countOfUnfinishedTasks()
+                + ", \"Food supplies\": " + user.getSimulationSession().getFoodSupplies() + '}';
     }
 
     @PostMapping("/checking_all_actions")
     public String checkingAllActions(HttpServletRequest request, Model model) {
         return getUserFromCookie(request).getSimulationSession().checkIfAllCasesHaveBeenCompleted().toString();
-//        return "false";
     }
 
     @PostMapping("/get_messages")
@@ -173,10 +201,24 @@ public class SimulationController {
                                     + " character died. He was " + player.getAge() + " years old."));
                     player.setProfession(InnateTalent.DEAD);
                 }
-//            farmer
-//            criminal
+//            FARMER
+                if (player.getProfession() == InnateTalent.FARMER) {
+                    user.getSimulationSession().setFoodSupplies(user.getSimulationSession().getFoodSupplies()
+                            + (food + player.getTalent()));
+                    notificationRepository.save(new SessionNotification(user.getSimulationSession(),
+                            user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                                    + " farmer " + player.getSerialNumber() + "'s has harvested: "
+                                    + (food + player.getTalent()) + " point of food."));
+                }
+//                CRIMINAL
+                if (player.getProfession() == InnateTalent.CRIMINAL
+                        && user.getSimulationSession().getPlayerCharacter().size() != 1) {
+                    criminalIsDoingSomethingBad(new ArrayList<>(user.getSimulationSession().getPlayerCharacter()),
+                            player, user);
+                }
 //                SHERIFF
-                if (player.getProfession() == InnateTalent.SHERIFF) {
+                if (player.getProfession() == InnateTalent.SHERIFF
+                        && user.getSimulationSession().getPlayerCharacter().size() != 1) {
                     sheriffIsLookingForACriminal(new ArrayList<>(user.getSimulationSession().getPlayerCharacter()),
                             player, user);
                 }
@@ -185,10 +227,13 @@ public class SimulationController {
                     player.setSpecialAction(1);
                 }
 //                prisoner
+                if (player.getProfession() == InnateTalent.PRISONER) {
 
+                }
             }
 //            marriage
 //            eat
+//            talent
 
             sessionRepository.save(user.getSimulationSession()); // сохраняем изменения после цикла изменений
             playerCharacterRepository.deleteInBatch(user.getSimulationSession().getAllDEAD()); // удаляем мертвых (DEAD)

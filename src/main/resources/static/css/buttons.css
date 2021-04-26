@@ -182,3 +182,20 @@
     vertical-align: middle;
     opacity: 0.6;
 }
+
+.button-heal-disabled {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: limegreen;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 13px;
+    padding: 5px;
+    width: 80px;
+    transition: all 0.5s;
+    cursor: not-allowed;
+    margin: 5px;
+    vertical-align: middle;
+    opacity: 0.6;
+}
