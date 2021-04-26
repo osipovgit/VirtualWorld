@@ -159,6 +159,20 @@ public class SimulationController {
         return getUserFromCookie(request).getSimulationSession().checkIfAllCasesHaveBeenCompleted().toString();
     }
 
+    @PostMapping("/get_actions")
+    public String getActions(HttpServletRequest request, Model model) {
+        User user = getUserFromCookie(request);
+        String actionsJson = "{";
+        for (PlayerCharacter player : user.getSimulationSession().getPlayerCharacter()) {
+            if (player.getProfession() == InnateTalent.CAUGHT) {
+                actionsJson += "\"caught\":\"ID: " + player.getSerialNumber() + " is caught\", ";
+            } else if (player.getProfession() == InnateTalent.VILLAGER) { // TODO random value
+                actionsJson += "\"profession\":\"ID: " + player.getSerialNumber() + " prepares to work:\", ";
+            }
+        }
+        return actionsJson + "\"end\":\"end\"}";
+    }
+
     @PostMapping("/get_messages")
     public String getMessages(HttpServletRequest request, Model model) {
         return getUserFromCookie(request).getSimulationSession().getNotifications().toString();
