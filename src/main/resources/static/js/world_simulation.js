@@ -13,9 +13,10 @@ function checkingAllActions() {
 }
 
 function decideFate(destiny, id) {
-
-    getActions()
-    displayPerks()
+    $.post(document.location + '/decide_fate', {id: id, destiny: destiny}).then(function () {
+        getActions()
+        displayPerks()
+    })
 }
 
 function displayPerks() {
@@ -79,9 +80,9 @@ function getActions() {
                     + "<span style='after'>SHERIFF</span></button>"
             } else if (key === "caught") {
                 txt += "<p>" + id + value + caught + "<button class='button-action' style='background-color: limegreen'"
-                    + " type='submit' onclick='decideFate(\"IMPRISON\", " + value + ")'>"
+                    + " type='submit' onclick='decideFate(\"PRISONER\", " + value + ")'>"
                     + "<span style='after'>IMPRISON</span></button>"
-                    + "<button class='button-action-kill' type='submit' onclick='decideFate(\"KILL\", " + value + ")'>"
+                    + "<button class='button-action-kill' type='submit' onclick='decideFate(\"DEAD\", " + value + ")'>"
                     + "<span style='after'>KILL</span></button>"
             }
         })

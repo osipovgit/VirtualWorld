@@ -1,6 +1,5 @@
 package com.osipov_evgeny.repository;
 
-import com.osipov_evgeny.entity.InnateTalent;
 import com.osipov_evgeny.entity.PlayerCharacter;
 import com.osipov_evgeny.entity.SimulationSession;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +16,22 @@ public interface PlayerCharacterRepository extends JpaRepository<PlayerCharacter
 
     List<PlayerCharacter> findAllBySimulationSessionId(SimulationSession simulationSessionId);
 
+    PlayerCharacter findBySimulationSessionIdAndSerialNumber(SimulationSession simulationSessionId, Long serialNumber);
+
     @Modifying
     @Transactional
     void deleteAllBySimulationSessionId(@Param("simulation_session_id") SimulationSession simulation_session_id);
+
+    @Modifying
+    @Transactional
+    void deleteBySimulationSessionIdAndSerialNumber(SimulationSession simulationSessionId, Long serialNumber);
+
+    @Modifying
+    @Transactional
+    void deletePlayerCharacterById(Long id);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true, value = "delete from player_characters where simulation_session_id=:simulation_session_id and id=:id")
+    void deleteBySimulationSessionIdAndId(@Param("simulation_session_id") SimulationSession simulation_session_id, @Param("id") Long id);
 }

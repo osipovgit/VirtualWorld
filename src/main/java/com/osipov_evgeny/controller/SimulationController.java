@@ -7,10 +7,7 @@ import com.osipov_evgeny.repository.SimulationSessionRepository;
 import com.osipov_evgeny.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -125,6 +122,7 @@ public class SimulationController {
         int randomIndex = new Random().nextInt(playerCharacters.size()); // получаем случайного персонажа
         if (playerCharacters.get(randomIndex).getProfession() == InnateTalent.CRIMINAL) { // проверяем его роль
             playerCharacters.get(randomIndex).setProfession(InnateTalent.CAUGHT); // роль "пойман" (далее решает юзер)
+            playerCharacters.get(randomIndex).setSpecialAction(1);
             notificationRepository.save(new SessionNotification(user.getSimulationSession(),
                     user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
                             + " caught criminal with ID: " + playerCharacters.get(randomIndex).getSerialNumber()));
@@ -180,16 +178,39 @@ public class SimulationController {
         return actionsJson + "\"end\":\"end\"}";
     }
 
+    @PostMapping("/decide_fate")
+    public String decideFate(@RequestParam("id") Long id, @RequestParam("destiny") InnateTalent profession, HttpServletRequest request, Model model) {
+        User user = getUserFromCookie(request);
+        System.out.println(profession);
+        PlayerCharacter playerCharacter = playerCharacterRepository.findBySimulationSessionIdAndSerialNumber(
+                getUserFromCookie(request).getSimulationSession(), id);
+        System.out.println(playerCharacter);
+        if (profession == InnateTalent.DEAD) {
+            notificationRepository.save(new SessionNotification(user.getSimulationSession(),
+                    user.getSimulationSession().getYear() + "y.  | You chose to kill the CRIMINAL with ID "
+                            + id + "."));
+            playerCharacterRepository.deleteBySimulationSessionIdAndId(user.getSimulationSession(), playerCharacter.getId());
+        } else {
+            System.out.println(playerCharacter);
+            playerCharacter.setProfession(profession);
+            playerCharacter.setSpecialAction(0);
+            playerCharacter.setTalent(0);
+            playerCharacterRepository.save(playerCharacter);
+            notificationRepository.save(new SessionNotification(user.getSimulationSession(),
+                    user.getSimulationSession().getYear() + "y.  | Now " + id + "'s is a " + profession + "."));
+        }
+        return "";
+    }
+
     @PostMapping("/get_messages")
     public String getMessages(HttpServletRequest request, Model model) {
         return getUserFromCookie(request).getSimulationSession().getNotifications().toString();
     }
 
     @PostMapping("/raise_health")
-    public String raiseHealth(@RequestBody String idFromRequestBody, HttpServletRequest request, Model model) {
+    public String raiseHealth(@RequestParam("id") Long playerCharacterId, HttpServletRequest request, Model model) {
         User user = getUserFromCookie(request);
         if (user.getSimulationSession().countOfDoctorsActions() > 0) {
-            Long playerCharacterId = Long.parseLong(new StringBuilder(idFromRequestBody).substring(3));
             for (PlayerCharacter doctorPC : user.getSimulationSession().getPlayerCharacter()) {
                 if (doctorPC.getProfession() == InnateTalent.DOCTOR && doctorPC.getSpecialAction() != 0) {
                     PlayerCharacter player = playerCharacterRepository.getOne(playerCharacterId);
@@ -216,6 +237,7 @@ public class SimulationController {
         if (user.getSimulationSession().checkIfAllCasesHaveBeenCompleted()) {
             user.getSimulationSession().nextYear();
             for (PlayerCharacter player : user.getSimulationSession().getPlayerCharacter()) {
+                // Death condition
                 if (player.getAge().equals(player.getDeadAge()) || player.getHealth() <= 0) {
                     notificationRepository.save(new SessionNotification(user.getSimulationSession(),
                             user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
@@ -256,7 +278,7 @@ public class SimulationController {
                     player.setProfession(null);
                     player.setSpecialAction(1);
                 }
-//                prisoner
+//                PRISONER
                 if (player.getProfession() == InnateTalent.PRISONER) {
                     if (player.getTalent() == 15) {
                         player.setTalent(0);
