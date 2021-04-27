@@ -12,13 +12,15 @@ function checkingAllActions() {
     })
 }
 
-function decideFate(destiny) {
-    alert(destiny)
+function decideFate(destiny, id) {
+
+    getActions()
+    displayPerks()
 }
 
 function displayPerks() {
     $.post(document.location + '/display').then(function (jsonPerksTable) {
-        $.post(document.location + '/checking_all_actions').then(function (data) {
+        $.post(document.location + '/checking_doctor_actions').then(function (areTheDoctorsActionsAvailable) {
             $('#table').empty()
             document.getElementById("table").value = ""
 
@@ -32,7 +34,7 @@ function displayPerks() {
                     txt += "<tr>"
                 }
                 if (key === "pc_id") {
-                    if (data === "true") {
+                    if (areTheDoctorsActionsAvailable === "false") {
                         txt += "<td><button class='button-heal-disabled' type='submit' onclick='raiseHealth("
                             + value + ")'><span style='after'>Heal</span></button></td>"
                     } else {
@@ -40,7 +42,12 @@ function displayPerks() {
                             + value + ")'><span style='after'>Heal</span></button></td>"
                     }
                 } else if (typeof value !== "object") {
-                    txt += "<td>" + value + "</td>"
+                    if (key === "profession" && value === "null") {
+                        txt += "<td>#OPENTOWORK</td>"
+
+                    } else {
+                        txt += "<td>" + value + "</td>"
+                    }
                 }
                 if (key === "pc_id") {
                     txt += "</tr>"
@@ -59,18 +66,22 @@ function getActions() {
     $.post(document.location + '/get_actions').then(function (actionJson) {
         $('#table').empty()
         let txt = "<div>"
+        let id = "ID: "
+        let caught = " is caught"
+        let profession = " prepares to work:"
         JSON.parse(actionJson, function (key, value) {
             if (key === "profession") {
-                txt += "<p>" + value + "</p><button class='' type='submit' onclick='decideFate(\"DOCTOR\")'>" +
-                    "<span style='after'>DOCTOR</span></button>"
-                    + "<button class='' type='submit' onclick='decideFate(\"FARMER\")'>"
+                txt += "<p>" + id + value + profession + "</p><button class='button-action' type='submit' onclick='"
+                    + "decideFate(\"DOCTOR\", " + value + ")'><span style='after'>DOCTOR</span></button>"
+                    + "<button class='button-action' type='submit' onclick='decideFate(\"FARMER\", " + value + ")'>"
                     + "<span style='after'>FARMER</span></button>"
-                    + "<button class='' type='submit' onclick='decideFate(\"SHERIFF\")'>"
+                    + "<button class='button-action' type='submit' onclick='decideFate(\"SHERIFF\", " + value + ")'>"
                     + "<span style='after'>SHERIFF</span></button>"
             } else if (key === "caught") {
-                txt += "<p>" + value + "<button class='' type='submit' onclick='decideFate(\"IMPRISON\")'>" +
-                    "<span style='after'>IMPRISON</span></button>"
-                    + "<button class='' type='submit' onclick='decideFate(\"KILL\")'>"
+                txt += "<p>" + id + value + caught + "<button class='button-action' style='background-color: limegreen'"
+                    + " type='submit' onclick='decideFate(\"IMPRISON\", " + value + ")'>"
+                    + "<span style='after'>IMPRISON</span></button>"
+                    + "<button class='button-action-kill' type='submit' onclick='decideFate(\"KILL\", " + value + ")'>"
                     + "<span style='after'>KILL</span></button>"
             }
         })

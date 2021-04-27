@@ -166,6 +166,90 @@
 }
 
 
+.button-action {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #ff9f00;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 13px;
+    padding: 6px;
+    width: 110px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-action span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-action span:after {
+    content: '\2611';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-action:hover span {
+    padding-right: 25px;
+}
+
+.button-action:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
+.button-action-kill {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: red;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 13px;
+    padding: 6px;
+    width: 110px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-action-kill span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-action-kill span:after {
+    content: '\271E';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-action-kill:hover span {
+    padding-right: 25px;
+}
+
+.button-action-kill:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
 .button-disabled {
     display: inline-block;
     border-radius: 4px;

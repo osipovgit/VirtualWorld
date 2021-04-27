@@ -55,6 +55,16 @@ public class SimulationSession {
         return players;
     }
 
+    public Integer countOfDoctorsActions() {
+        Integer sumAllSpecialAction = 0;
+        for (PlayerCharacter player: playerCharacter) {
+            if (player.getProfession() == InnateTalent.DOCTOR) {
+                sumAllSpecialAction += player.getSpecialAction();
+            }
+        }
+        return sumAllSpecialAction;
+    }
+
     public Integer countOfUnfinishedTasks() {
         Integer sumAllSpecialAction = 0;
         for (PlayerCharacter player: playerCharacter) {
