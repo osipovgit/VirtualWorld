@@ -14,21 +14,16 @@ public class WebController {
 
     @GetMapping("/auth")
     public String authorization(Model model){
-        return "authorization";
+        return "signup_and_login";
     }
 
     @GetMapping("/join")
     public String registration(Model model){
-        return "registration.html";
+        return "signup_and_login";
     }
 
     @GetMapping("/simulation")
     public String simulationView(Model model){
         return "world_simulation";
-    }
-
-    @GetMapping("/result")
-    public String resultView(Model model){
-        return "simulation_results";
     }
 }
