@@ -41,13 +41,14 @@ public class SimulationSession {
 
     public void nextYear() {
         this.year += 1;
-        for (PlayerCharacter player: playerCharacter) {
+        for (PlayerCharacter player : playerCharacter) {
             player.setAge(player.getAge() + 1);
-        }    }
+        }
+    }
 
-    public List<PlayerCharacter> getAllDEAD() {
+    public List<PlayerCharacter> getAllDead() {
         List<PlayerCharacter> players = new ArrayList<>();
-        for (PlayerCharacter player: playerCharacter) {
+        for (PlayerCharacter player : playerCharacter) {
             if (player.getProfession() == InnateTalent.DEAD) {
                 players.add(player);
             }
@@ -57,7 +58,7 @@ public class SimulationSession {
 
     public Integer countOfDoctorsActions() {
         Integer sumAllSpecialAction = 0;
-        for (PlayerCharacter player: playerCharacter) {
+        for (PlayerCharacter player : playerCharacter) {
             if (player.getProfession() == InnateTalent.DOCTOR) {
                 sumAllSpecialAction += player.getSpecialAction();
             }
@@ -67,7 +68,7 @@ public class SimulationSession {
 
     public Integer countOfUnfinishedTasks() {
         Integer sumAllSpecialAction = 0;
-        for (PlayerCharacter player: playerCharacter) {
+        for (PlayerCharacter player : playerCharacter) {
             sumAllSpecialAction += player.getSpecialAction();
         }
         return sumAllSpecialAction;
