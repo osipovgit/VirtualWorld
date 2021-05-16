@@ -1,5 +1,5 @@
 server:
-  port: SERVER_PORT
+  port: ${SERVER_PORT}
 spring:
   mvc:
     view:
@@ -9,9 +9,9 @@ spring:
     prefix: file:src/main/resources/templates/
     suffix: .html
   datasource:
-    url: jdbc:mysql://HOST:PORT/DATABASE?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-    username: USERNAME
-    password: PASSWORD
+    url: jdbc:mysql://${MYSQL_URL}?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    username: ${MYSQL_ROOT_USERNAME}
+    password: ${MYSQL_ROOT_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update

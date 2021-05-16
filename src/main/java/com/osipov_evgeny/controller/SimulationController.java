@@ -140,6 +140,7 @@ public class SimulationController {
             int shareOfTotalFoodSupply = FOOD_PER_PLAYER_CHARACTER;
             switch (player.getProfession()) {
                 case VILLAGER:
+                case CRIMINAL:
                     shareOfTotalFoodSupply /= 2;
                     break;
                 case PRISONER:
