@@ -18,6 +18,8 @@ public interface PlayerCharacterRepository extends JpaRepository<PlayerCharacter
 
     PlayerCharacter findBySimulationSessionIdAndSerialNumber(SimulationSession simulationSessionId, Long serialNumber);
 
+    PlayerCharacter findBySimulationSessionIdAndIdMarriage(SimulationSession simulationSessionId, Integer idMarriage);
+
     @Modifying
     @Transactional
     void deleteAllBySimulationSessionId(@Param("simulation_session_id") SimulationSession simulation_session_id);

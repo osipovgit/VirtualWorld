@@ -21,7 +21,7 @@ public class PlayerCharacter {
     private Integer generation;
     private String sex;
     private Integer health;
-    private Integer idMarriage;
+    private Long idMarriage;
     private Integer talent;
     private Integer specialAction;
 
@@ -129,11 +129,11 @@ public class PlayerCharacter {
         this.health = health;
     }
 
-    public Integer getIdMarriage() {
+    public Long getIdMarriage() {
         return idMarriage;
     }
 
-    public void setIdMarriage(Integer idMarriage) {
+    public void setIdMarriage(Long idMarriage) {
         this.idMarriage = idMarriage;
     }
 
@@ -174,7 +174,7 @@ public class PlayerCharacter {
                 "\", \"generation\":\"" + generation +
                 "\", \"sex\":\"" + sex +
                 "\", \"health\":\"" + health +
-                "\", \"idMarriage\":\"" + (idMarriage == null ? '-' : idMarriage) +
+                "\", \"idMarriage\":\"" + (idMarriage == null ? "-" : idMarriage) +
                 "\", \"talent\":\"" + talent +
                 "\", \"pc_id\":\"" + id + "\"}";
     }

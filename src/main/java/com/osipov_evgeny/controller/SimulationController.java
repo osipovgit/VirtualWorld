@@ -151,12 +151,34 @@ public class SimulationController {
             }
 
             session.setFoodSupplies(session.getFoodSupplies() - shareOfTotalFoodSupply);
-            player.setHealth((int) (player.getHealth() + (session.getFoodSupplies() >= 0 ? HEALTH_PER_UNIT_OF_FOOD: session.getFoodSupplies() * HEALTH_PER_UNIT_OF_FOOD)));
+            player.setHealth((int) (player.getHealth() + (session.getFoodSupplies() >= 0 ? HEALTH_PER_UNIT_OF_FOOD : session.getFoodSupplies() * HEALTH_PER_UNIT_OF_FOOD)));
             if (session.getFoodSupplies() < 0) {
                 session.setFoodSupplies(0L);
             }
         }
         sessionRepository.save(session);
+    }
+
+    private SimulationSession creationAndDestructionOfMarriage(SimulationSession session) {
+        Collections.shuffle(session.getPlayerCharacter());
+        for (PlayerCharacter player : session.getPlayerCharacter()) {
+            PlayerCharacter randomPlayer = session.getPlayerCharacter().get(new Random().nextInt(session.getPlayerCharacter().size()));
+            if (randomPlayer != player && !randomPlayer.getSex().equals(player.getSex())
+                    && player.getAge() >= 16 && player.getIdMarriage() == null
+                    && randomPlayer.getAge() >= 16 && randomPlayer.getIdMarriage() == null
+                    && randomPlayer.getProfession() != InnateTalent.PRISONER
+                    && player.getProfession() != InnateTalent.PRISONER
+                    && new Random().nextInt(UPPER_BOUND_OF_RANDOM_VALUE) < 1) {
+                player.setIdMarriage(randomPlayer.getSerialNumber());
+                for (PlayerCharacter findRandomPlayer : session.getPlayerCharacter()) {
+                    if (findRandomPlayer.getId().equals(randomPlayer.getId())) {
+                        findRandomPlayer.setIdMarriage(player.getSerialNumber());
+                        break;
+                    }
+                }
+            }
+        }
+        return session;
     }
 
     @PostMapping("/display")
@@ -267,6 +289,7 @@ public class SimulationController {
             foodDistribution(user.getSimulationSession());
             user = userRepository.getOne(user.getId());
             user.getSimulationSession().nextYear();
+
             for (PlayerCharacter player : user.getSimulationSession().getPlayerCharacter()) {
                 // Death condition
                 if (player.getAge().equals(player.getDeadAge()) || player.getHealth() <= 0) {
@@ -274,6 +297,15 @@ public class SimulationController {
                             user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
                                     + " character died. He was " + player.getAge() + " years old."));
                     player.setProfession(InnateTalent.DEAD);
+
+                    if (player.getIdMarriage() != null) {   // Delete id_marriage if partner died
+                        for (PlayerCharacter playerAlone : user.getSimulationSession().getPlayerCharacter()) {
+                            if (playerAlone.getSerialNumber() == player.getIdMarriage()) {
+                                playerAlone.setIdMarriage(null);
+                                break;
+                            }
+                        }
+                    }
                 }
                 // FARMER
                 if (player.getProfession() == InnateTalent.FARMER) {
@@ -324,7 +356,8 @@ public class SimulationController {
                 }
             }
 //            marriage
-//            eat
+            user.setSimulationSession(creationAndDestructionOfMarriage(user.getSimulationSession()));
+
 //            talent
             // изменение профессии на criminal
 
