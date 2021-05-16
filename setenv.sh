@@ -1,5 +1,5 @@
 # Environment variables. Run a console command to install:
-# $. ./setenv.sh
+# $ . ./setenv.sh
 
 # server configuration
 export SERVER_PORT=

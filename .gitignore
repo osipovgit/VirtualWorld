@@ -1,11 +1,12 @@
 build
 gradle
 .gradle
-gradlew*
 .idea
-*.iml
+gradlew*
 log
-*.log
 out
 .class
 settings.gradle
+*.iml
+*.log
+*.sh
