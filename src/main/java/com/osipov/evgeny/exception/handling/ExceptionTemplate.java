@@ -1,10 +1,8 @@
-package com.osipov_evgeny.exception_handling;
+package com.osipov.evgeny.exception.handling;
 
 public class ExceptionTemplate {
-    private String exceptionInfo;
 
-    public ExceptionTemplate() {
-    }
+    private String exceptionInfo;
 
     public ExceptionTemplate(String info) {
         this.exceptionInfo = info;
@@ -17,4 +15,5 @@ public class ExceptionTemplate {
     public void setExceptionInfo(String exceptionInfo) {
         this.exceptionInfo = exceptionInfo;
     }
+
 }

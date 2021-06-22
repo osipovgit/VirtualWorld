@@ -1,6 +1,15 @@
-package com.osipov_evgeny.entity;
+package com.osipov.evgeny.entity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +58,7 @@ public class SimulationSession {
     public List<PlayerCharacter> getAllDead() {
         List<PlayerCharacter> players = new ArrayList<>();
         for (PlayerCharacter player : playerCharacter) {
-            if (player.getProfession() == InnateTalent.DEAD) {
+            if (player.getModelState() == ModelState.DEAD) {
                 players.add(player);
             }
         }
@@ -59,7 +68,7 @@ public class SimulationSession {
     public Integer countOfDoctorsActions() {
         Integer sumAllSpecialAction = 0;
         for (PlayerCharacter player : playerCharacter) {
-            if (player.getProfession() == InnateTalent.DOCTOR) {
+            if (player.getModelState() == ModelState.DOCTOR) {
                 sumAllSpecialAction += player.getSpecialAction();
             }
         }

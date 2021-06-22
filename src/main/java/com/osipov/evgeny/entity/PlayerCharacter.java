@@ -1,6 +1,14 @@
-package com.osipov_evgeny.entity;
+package com.osipov.evgeny.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Objects;
 import java.util.Random;
 
@@ -15,7 +23,7 @@ public class PlayerCharacter {
     @JoinColumn(name = "simulationSessionId")
     private SimulationSession simulationSessionId;
     @Enumerated(EnumType.STRING)
-    private InnateTalent profession;
+    private ModelState modelState;
     private Integer age;
     private Integer deadAge;
     private Integer generation;
@@ -27,7 +35,7 @@ public class PlayerCharacter {
 
     public PlayerCharacter() {
         String[] randomSex = {"man", "woman"};
-        this.profession = InnateTalent.VILLAGER;
+        this.modelState = ModelState.VILLAGER;
         this.age = 0;
         this.deadAge = new Random().nextInt(101) + 50;
         this.sex = randomSex[new Random().nextInt(2)];
@@ -41,7 +49,7 @@ public class PlayerCharacter {
         String[] randomSex = {"man", "woman"};
         this.simulationSessionId = simulationSessionId;
         this.serialNumber = serialNumber;
-        this.profession = InnateTalent.VILLAGER;
+        this.modelState = ModelState.VILLAGER;
         this.age = 0;
         this.deadAge = new Random().nextInt(101) + 50;
         this.generation = generation;
@@ -52,17 +60,12 @@ public class PlayerCharacter {
         this.specialAction = 0;
     }
 
-    public void becomeAYearOlder(Integer age) {
+    public void becomeAYearOlder() {
         this.age += 1;
     }
 
     public Long getId() {
         return id;
-    }
-
-    @Deprecated
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getSerialNumber() {
@@ -81,12 +84,12 @@ public class PlayerCharacter {
         this.simulationSessionId = simulationSessionId;
     }
 
-    public InnateTalent getProfession() {
-        return profession;
+    public ModelState getModelState() {
+        return modelState;
     }
 
-    public void setProfession(InnateTalent profession) {
-        this.profession = profession;
+    public void setModelState(ModelState modelState) {
+        this.modelState = modelState;
     }
 
     public Integer getAge() {
@@ -158,18 +161,18 @@ public class PlayerCharacter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerCharacter that = (PlayerCharacter) o;
-        return Objects.equals(id, that.id) && Objects.equals(serialNumber, that.serialNumber) && Objects.equals(simulationSessionId, that.simulationSessionId) && profession == that.profession && Objects.equals(age, that.age) && Objects.equals(deadAge, that.deadAge) && Objects.equals(generation, that.generation) && Objects.equals(sex, that.sex) && Objects.equals(health, that.health) && Objects.equals(idMarriage, that.idMarriage) && Objects.equals(talent, that.talent) && Objects.equals(specialAction, that.specialAction);
+        return Objects.equals(id, that.id) && Objects.equals(serialNumber, that.serialNumber) && Objects.equals(simulationSessionId, that.simulationSessionId) && modelState == that.modelState && Objects.equals(age, that.age) && Objects.equals(deadAge, that.deadAge) && Objects.equals(generation, that.generation) && Objects.equals(sex, that.sex) && Objects.equals(health, that.health) && Objects.equals(idMarriage, that.idMarriage) && Objects.equals(talent, that.talent) && Objects.equals(specialAction, that.specialAction);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, serialNumber, simulationSessionId, profession, age, deadAge, generation, sex, health, idMarriage, talent, specialAction);
+        return Objects.hash(id, serialNumber, simulationSessionId, modelState, age, deadAge, generation, sex, health, idMarriage, talent, specialAction);
     }
 
     @Override
     public String toString() {
         return "{\"id\":\"" + serialNumber +
-                "\", \"profession\":\"" + profession +
+                "\", \"model state\":\"" + modelState +
                 "\", \"age\":\"" + age +
                 "\", \"generation\":\"" + generation +
                 "\", \"sex\":\"" + sex +

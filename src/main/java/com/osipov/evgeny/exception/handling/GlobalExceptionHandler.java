@@ -1,4 +1,4 @@
-package com.osipov_evgeny.exception_handling;
+package com.osipov.evgeny.exception.handling;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ExceptionTemplate> handleException(Exception exception) {
         ExceptionTemplate exceptionTemplate = new ExceptionTemplate(exception.getMessage());
-
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
+
 }

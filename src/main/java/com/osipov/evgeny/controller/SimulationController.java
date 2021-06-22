@@ -1,13 +1,19 @@
-package com.osipov_evgeny.controller;
+package com.osipov.evgeny.controller;
 
-import com.osipov_evgeny.entity.*;
-import com.osipov_evgeny.repository.PlayerCharacterRepository;
-import com.osipov_evgeny.repository.SessionNotificationRepository;
-import com.osipov_evgeny.repository.SimulationSessionRepository;
-import com.osipov_evgeny.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.osipov.evgeny.entity.PlayerCharacter;
+import com.osipov.evgeny.entity.SessionNotification;
+import com.osipov.evgeny.entity.SimulationSession;
+import com.osipov.evgeny.entity.User;
+import com.osipov.evgeny.entity.ModelState;
+import com.osipov.evgeny.repository.PlayerCharacterRepository;
+import com.osipov.evgeny.repository.SessionNotificationRepository;
+import com.osipov.evgeny.repository.UserRepository;
+import com.osipov.evgeny.repository.SimulationSessionRepository;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +28,8 @@ public class SimulationController {
     /* TODO: функционал игры:
              создание/развод пары (минимальный возраст?)
              приход новых жителей в поселение?
+             улучшенный баланс
      */
-    // TODO: улучшенный баланс
 
     private static final Integer HEAL = 10;     // HEAL + doctor.getTalent()
     private static final Integer FOOD = 10;     // FOOD + farmer.getTalent()
@@ -35,19 +41,13 @@ public class SimulationController {
     private static final Integer UPPER_TO_DAMAGE = 4; // (randomValue > upperToDamage) -> damage []
     private static final Integer UPPER_BOUND_OF_RANDOM_VALUE = 10; // [0, upperBound) of randomValue
 
-    @Autowired
     private final UserRepository userRepository;
-
-    @Autowired
     private final SimulationSessionRepository sessionRepository;
-
-    @Autowired
     private final PlayerCharacterRepository playerCharacterRepository;
-
-    @Autowired
     private final SessionNotificationRepository notificationRepository;
 
-    public SimulationController(UserRepository userRepository, SimulationSessionRepository sessionRepository,
+    public SimulationController(UserRepository userRepository,
+                                SimulationSessionRepository sessionRepository,
                                 PlayerCharacterRepository playerCharacterRepository,
                                 SessionNotificationRepository notificationRepository) {
         this.userRepository = userRepository;
@@ -84,7 +84,7 @@ public class SimulationController {
         for (int i = 0; i < 5; ++i) {
             PlayerCharacter playerCharacter = new PlayerCharacter(user.getSimulationSession(),
                     user.getSimulationSession().getNextNumberOfPlayerCharacter(), 0);
-            playerCharacter.setProfession(InnateTalent.getRandomRole());
+            playerCharacter.setModelState(ModelState.getRandomState());
             playerCharacter.setAge(new Random().nextInt(playerCharacter.getDeadAge() - 3));
             playerCharacter.setTalent((playerCharacter.getAge() > 14 ? (playerCharacter.getAge() - 14) / 5 : 0));
             players.add(playerCharacter);
@@ -98,24 +98,24 @@ public class SimulationController {
                                              PlayerCharacter player, User user) {
         playerCharacters.remove(player);    // удаляем самого преступника из списка
         int randomIndex = new Random().nextInt(playerCharacters.size()); // получаем случайную жертву
-        if (playerCharacters.get(randomIndex).getProfession() != InnateTalent.CAUGHT
-                && playerCharacters.get(randomIndex).getProfession() != InnateTalent.PRISONER
-                && playerCharacters.get(randomIndex).getProfession() != InnateTalent.DEAD
-                && playerCharacters.get(randomIndex).getProfession() != null) {
+        if (playerCharacters.get(randomIndex).getModelState() != ModelState.CAUGHT
+                && playerCharacters.get(randomIndex).getModelState() != ModelState.PRISONER
+                && playerCharacters.get(randomIndex).getModelState() != ModelState.DEAD
+                && playerCharacters.get(randomIndex).getModelState() != null) {
             PlayerCharacter randomPlayer = playerCharacters.get(randomIndex);
             int randomValue = new Random().nextInt(UPPER_BOUND_OF_RANDOM_VALUE);
             if (randomValue < LOWER_TO_KILL) {
                 notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                        user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
-                                + " killed " + randomPlayer.getAge() + " year old " + randomPlayer.getProfession()));
-                randomPlayer.setProfession(InnateTalent.DEAD);
+                        user.getSimulationSession().getYear() + "y.  | " + player.getModelState()
+                                + " killed " + randomPlayer.getAge() + " year old " + randomPlayer.getModelState()));
+                randomPlayer.setModelState(ModelState.DEAD);
                 playerCharacterRepository.save(randomPlayer);
             } else if (randomValue > UPPER_TO_DAMAGE) {
                 randomPlayer.setHealth(randomPlayer.getHealth() - (DAMAGE + randomPlayer.getTalent()));
                 notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                        user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                        user.getSimulationSession().getYear() + "y.  | " + player.getModelState()
                                 + " deals " + (DAMAGE + randomPlayer.getTalent()) + " damage to "
-                                + randomPlayer.getAge() + " year old " + randomPlayer.getProfession()));
+                                + randomPlayer.getAge() + " year old " + randomPlayer.getModelState()));
             }   // иначе преступник ничего не делает
         }
     }
@@ -124,11 +124,11 @@ public class SimulationController {
                                               PlayerCharacter player, User user) {
         playerCharacters.remove(player); // удаляем самого шерифа из списка
         int randomIndex = new Random().nextInt(playerCharacters.size()); // получаем случайного персонажа
-        if (playerCharacters.get(randomIndex).getProfession() == InnateTalent.CRIMINAL) { // проверяем его роль
-            playerCharacters.get(randomIndex).setProfession(InnateTalent.CAUGHT); // роль "пойман" (далее решает юзер)
+        if (playerCharacters.get(randomIndex).getModelState() == ModelState.CRIMINAL) { // проверяем его роль
+            playerCharacters.get(randomIndex).setModelState(ModelState.CAUGHT); // роль "пойман" (далее решает юзер)
             playerCharacters.get(randomIndex).setSpecialAction(1);
             notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                    user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                    user.getSimulationSession().getYear() + "y.  | " + player.getModelState()
                             + " caught criminal with ID: " + playerCharacters.get(randomIndex).getSerialNumber()));
             playerCharacterRepository.save(playerCharacters.get(randomIndex)); // сохраняем персонажа с новой ролью
         }
@@ -138,7 +138,7 @@ public class SimulationController {
         Collections.shuffle(session.getPlayerCharacter());
         for (PlayerCharacter player : session.getPlayerCharacter()) {
             int shareOfTotalFoodSupply = FOOD_PER_PLAYER_CHARACTER;
-            switch (player.getProfession()) {
+            switch (player.getModelState()) {
                 case VILLAGER:
                 case CRIMINAL:
                     shareOfTotalFoodSupply /= 2;
@@ -166,8 +166,8 @@ public class SimulationController {
             if (randomPlayer != player && !randomPlayer.getSex().equals(player.getSex())
                     && player.getAge() >= 16 && player.getIdMarriage() == null
                     && randomPlayer.getAge() >= 16 && randomPlayer.getIdMarriage() == null
-                    && randomPlayer.getProfession() != InnateTalent.PRISONER
-                    && player.getProfession() != InnateTalent.PRISONER
+                    && randomPlayer.getModelState() != ModelState.PRISONER
+                    && player.getModelState() != ModelState.PRISONER
                     && new Random().nextInt(UPPER_BOUND_OF_RANDOM_VALUE) < 1) {
                 player.setIdMarriage(randomPlayer.getSerialNumber());
                 for (PlayerCharacter findRandomPlayer : session.getPlayerCharacter()) {
@@ -218,12 +218,12 @@ public class SimulationController {
     @PostMapping("/get_actions")
     public String getActions(HttpServletRequest request, Model model) {
         User user = getUserFromCookie(request);
-        String actionsJson = "{";
+        StringBuilder actionsJson = new StringBuilder("{");
         for (PlayerCharacter player : user.getSimulationSession().getPlayerCharacter()) {
-            if (player.getProfession() == InnateTalent.CAUGHT) {
-                actionsJson += "\"caught\":\"" + player.getSerialNumber() + "\", ";
-            } else if (player.getProfession() == null) {
-                actionsJson += "\"profession\":\"" + player.getSerialNumber() + "\", ";
+            if (player.getModelState() == ModelState.CAUGHT) {
+                actionsJson.append("\"caught\":\"").append(player.getSerialNumber()).append("\", ");
+            } else if (player.getModelState() == null) {
+                actionsJson.append("\"profession\":\"").append(player.getSerialNumber()).append("\", ");
             }
         }
         return actionsJson + "\"end\":\"end\"}";
@@ -231,24 +231,24 @@ public class SimulationController {
 
     @PostMapping("/decide_fate")
     public String userChangeProfessionFromVillagerOrCaught(@RequestParam("id") Long id,
-                                                           @RequestParam("destiny") InnateTalent profession,
+                                                           @RequestParam("modelState") ModelState modelState,
                                                            HttpServletRequest request, Model model) {
         User user = getUserFromCookie(request);
         PlayerCharacter playerCharacter = playerCharacterRepository.findBySimulationSessionIdAndSerialNumber(
                 getUserFromCookie(request).getSimulationSession(), id);
-        if (profession == InnateTalent.DEAD) {
+        if (modelState == ModelState.DEAD) {
             notificationRepository.save(new SessionNotification(user.getSimulationSession(),
                     user.getSimulationSession().getYear() + "y.  | You chose to kill the CRIMINAL with ID "
                             + id + "."));
             playerCharacterRepository.deleteBySimulationSessionIdAndId(user.getSimulationSession(), playerCharacter.getId());
         } else {
             System.out.println(playerCharacter);
-            playerCharacter.setProfession(profession);
+            playerCharacter.setModelState(modelState);
             playerCharacter.setSpecialAction(0);
             playerCharacter.setTalent(0);
             playerCharacterRepository.save(playerCharacter);
             notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                    user.getSimulationSession().getYear() + "y.  | Now " + id + "'s is a " + profession + "."));
+                    user.getSimulationSession().getYear() + "y.  | Now " + id + "'s is a " + modelState + "."));
         }
         return "";
     }
@@ -263,7 +263,7 @@ public class SimulationController {
         User user = getUserFromCookie(request);
         if (user.getSimulationSession().countOfDoctorsActions() > 0) {
             for (PlayerCharacter doctorPC : user.getSimulationSession().getPlayerCharacter()) {
-                if (doctorPC.getProfession() == InnateTalent.DOCTOR && doctorPC.getSpecialAction() != 0) {
+                if (doctorPC.getModelState() == ModelState.DOCTOR && doctorPC.getSpecialAction() != 0) {
                     PlayerCharacter player = playerCharacterRepository.getOne(playerCharacterId);
                     player.setHealth(player.getHealth() + HEAL + doctorPC.getTalent());
                     doctorPC.setSpecialAction(0);
@@ -294,13 +294,13 @@ public class SimulationController {
                 // Death condition
                 if (player.getAge().equals(player.getDeadAge()) || player.getHealth() <= 0) {
                     notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                            user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                            user.getSimulationSession().getYear() + "y.  | " + player.getModelState()
                                     + " character died. He was " + player.getAge() + " years old."));
-                    player.setProfession(InnateTalent.DEAD);
+                    player.setModelState(ModelState.DEAD);
 
                     if (player.getIdMarriage() != null) {   // Delete id_marriage if partner died
                         for (PlayerCharacter playerAlone : user.getSimulationSession().getPlayerCharacter()) {
-                            if (playerAlone.getSerialNumber() == player.getIdMarriage()) {
+                            if (playerAlone.getSerialNumber().equals(player.getIdMarriage())) {
                                 playerAlone.setIdMarriage(null);
                                 break;
                             }
@@ -308,48 +308,48 @@ public class SimulationController {
                     }
                 }
                 // FARMER
-                if (player.getProfession() == InnateTalent.FARMER) {
+                if (player.getModelState() == ModelState.FARMER) {
                     user.getSimulationSession().setFoodSupplies(user.getSimulationSession().getFoodSupplies()
                             + (FOOD + player.getTalent()));
                     notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                            user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                            user.getSimulationSession().getYear() + "y.  | " + player.getModelState()
                                     + " with ID " + player.getSerialNumber() + " has harvested: "
                                     + (FOOD + player.getTalent()) + " point of food."));
                 }
                 // CRIMINAL
-                if (player.getProfession() == InnateTalent.CRIMINAL
+                if (player.getModelState() == ModelState.CRIMINAL
                         && user.getSimulationSession().getPlayerCharacter().size() != 1) {
                     criminalIsDoingSomethingBad(new ArrayList<>(user.getSimulationSession().getPlayerCharacter()),
                             player, user);
                 }
                 // SHERIFF
-                if (player.getProfession() == InnateTalent.SHERIFF
+                if (player.getModelState() == ModelState.SHERIFF
                         && user.getSimulationSession().getPlayerCharacter().size() != 1) {
                     sheriffIsLookingForACriminal(new ArrayList<>(user.getSimulationSession().getPlayerCharacter()),
                             player, user);
                 }
                 // DOCTOR
-                if (player.getProfession() == InnateTalent.DOCTOR) {
+                if (player.getModelState() == ModelState.DOCTOR) {
                     player.setSpecialAction(1);
                 }
                 // VILLAGER
-                if (player.getProfession() == InnateTalent.VILLAGER
+                if (player.getModelState() == ModelState.VILLAGER
                         && new Random().nextInt(UPPER_BOUND_OF_RANDOM_VALUE) < LOWER_TO_SET_PROFESSION) {
                     notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                            user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                            user.getSimulationSession().getYear() + "y.  | " + player.getModelState()
                                     + " with ID " + player.getSerialNumber() + " is open to work! Help him with choice!"));
-                    player.setProfession(null);
+                    player.setModelState(null);
                     player.setSpecialAction(1);
                 }
                 // PRISONER
-                if (player.getProfession() == InnateTalent.PRISONER) {
+                if (player.getModelState() == ModelState.PRISONER) {
                     if (player.getTalent() == 15) {
                         player.setTalent(0);
                         notificationRepository.save(new SessionNotification(user.getSimulationSession(),
-                                user.getSimulationSession().getYear() + "y.  | " + player.getProfession()
+                                user.getSimulationSession().getYear() + "y.  | " + player.getModelState()
                                         + " with ID " + player.getSerialNumber() + " reformed in prison and "
                                         + "starts a different life. Now: VILLAGER"));
-                        player.setProfession(InnateTalent.VILLAGER);
+                        player.setModelState(ModelState.VILLAGER);
                     } else {
                         player.setTalent(player.getTalent() + 1);
                     }
@@ -368,7 +368,6 @@ public class SimulationController {
             SimulationSession session = sessionRepository.findSimulationSessionByOwner(user);
             session.setPlayerCharacter(playerCharacterRepository.findAllBySimulationSessionId(session));
 
-            // проверка оставшихся персонажей (empty == game over)
             if (session.getPlayerCharacter().isEmpty() || session.getPlayerCharacter() == null) {
                 String results = "Simulation lasted " + session.getYear() + " years. Population: "
                         + session.getNumberOfNextPlayerCharacters();
@@ -385,4 +384,5 @@ public class SimulationController {
             return "Wait until you've, finished";
         }
     }
+
 }

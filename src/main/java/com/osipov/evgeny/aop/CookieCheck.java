@@ -1,5 +1,6 @@
-package com.osipov_evgeny.aop;
+package com.osipov.evgeny.aop;
 
+import com.osipov.evgeny.config.MappingConfig;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,12 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 public class CookieCheck {
 
+    public static final String cookieKey = "user_id";
+
     private Cookie getCookieFromRequestOrReturnNull() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest();
         Cookie cookie = null;
         for (Cookie cookies : request.getCookies()) {
-            if (cookies.getName().equals("user_id")) {
+            if (cookies.getName().equals(cookieKey)) {
                 cookie = cookies;
                 break;
             }
@@ -27,21 +30,21 @@ public class CookieCheck {
         return cookie;
     }
 
-    @Around("PointcutContainer.userIsAlreadyRegisteredOrLoggedIn()")
+    @Around("com.osipov.evgeny.aop.PointcutContainer.userIsAlreadyRegisteredOrLoggedIn()")
     public String userIsAlreadyLoginCheck(ProceedingJoinPoint point) throws Throwable {
         System.out.println(">>> userIsAlreadyLoginCheck ----------------------");
         Cookie cookie = getCookieFromRequestOrReturnNull();
         if (cookie != null) {
             System.out.println("INFO --- [userIsAlreadyLoginCheck]  User with id = " + cookie.getValue()
                     + " trying auth again.");
-            return "redirect:/";
+            return MappingConfig.homePageLink;
         } else {
             Object targetMethod = point.proceed();
             return targetMethod.toString();
         }
     }
 
-    @Around("PointcutContainer.userIsNotLoggedIn()")
+    @Around("com.osipov.evgeny.aop.PointcutContainer.userIsNotLoggedIn()")
     public String userIsNotLoggedInCheck(ProceedingJoinPoint point) throws Throwable {
         Cookie cookie = getCookieFromRequestOrReturnNull();
         if (cookie != null) {
@@ -49,7 +52,7 @@ public class CookieCheck {
             return targetMethod.toString();
         } else {
             System.out.println("INFO --- [userIsNotLoggedInCheck]  Anonymous user trying enter.");
-            return "redirect:/auth";
+            return MappingConfig.authPageLink;
         }
     }
 }
