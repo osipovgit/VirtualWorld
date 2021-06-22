@@ -25,15 +25,15 @@ public class AccountController {
     public String authorization(User user, HttpServletResponse response, Model model){
         User userFromDatabase = userRepository.findByUsername(user.getUsername());
         if (userFromDatabase == null) {
-            return MappingConfig.authPageLink;
+            return MappingConfig.REDIRECT_AUTH;
         }
         else if (userFromDatabase.getUsername().equals(user.getUsername())
                 && userFromDatabase.getPassword().equals(user.getPassword())) {
-            Cookie cookie = new Cookie(CookieCheck.cookieKey, userFromDatabase.getId().toString());
+            Cookie cookie = new Cookie(CookieCheck.COOKIE_KEY, userFromDatabase.getId().toString());
             response.addCookie(cookie);
-            return MappingConfig.homePageLink;
+            return MappingConfig.REDIRECT_HOME;
         }
-        return MappingConfig.authPageLink;
+        return MappingConfig.REDIRECT_AUTH;
     }
 
     @PostMapping("/join")
@@ -42,19 +42,19 @@ public class AccountController {
         if (userFromDatabase == null) {
             userRepository.save(user);
             user = userRepository.findByUsername(user.getUsername());
-            Cookie cookie = new Cookie(CookieCheck.cookieKey, user.getId().toString());
+            Cookie cookie = new Cookie(CookieCheck.COOKIE_KEY, user.getId().toString());
             response.addCookie(cookie);
-            return MappingConfig.homePageLink;
+            return MappingConfig.REDIRECT_HOME;
         }
-        return MappingConfig.joinPageLink;
+        return MappingConfig.REDIRECT_JOIN;
     }
 
     @PostMapping("/logout")
     public String logout(HttpServletResponse response, Model model){
-        Cookie cookie = new Cookie(CookieCheck.cookieKey, null);
+        Cookie cookie = new Cookie(CookieCheck.COOKIE_KEY, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-        return MappingConfig.authPageLink;
+        return MappingConfig.REDIRECT_AUTH;
     }
 
 }

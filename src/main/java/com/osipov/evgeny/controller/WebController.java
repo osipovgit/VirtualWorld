@@ -10,22 +10,22 @@ public class WebController {
 
     @GetMapping("/")
     public String homePage(Model model){
-        return MappingConfig.homePage;
+        return MappingConfig.HOME_PAGE;
     }
 
     @GetMapping("/auth")
     public String authorization(Model model){
-        return MappingConfig.signupAndLoginPage;
+        return MappingConfig.SIGNUP_AND_LOGIN;
     }
 
     @GetMapping("/join")
     public String registration(Model model){
-        return MappingConfig.signupAndLoginPage;
+        return MappingConfig.SIGNUP_AND_LOGIN;
     }
 
     @GetMapping("/simulation")
     public String simulationView(Model model){
-        return MappingConfig.simulationPage;
+        return MappingConfig.WORLD_SIMULATION;
     }
 
 }

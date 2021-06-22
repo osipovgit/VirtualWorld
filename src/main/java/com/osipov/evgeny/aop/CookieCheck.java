@@ -15,14 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 public class CookieCheck {
 
-    public static final String cookieKey = "user_id";
+    public static final String COOKIE_KEY = "user_id";
 
     private Cookie getCookieFromRequestOrReturnNull() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest();
         Cookie cookie = null;
         for (Cookie cookies : request.getCookies()) {
-            if (cookies.getName().equals(cookieKey)) {
+            if (cookies.getName().equals(COOKIE_KEY)) {
                 cookie = cookies;
                 break;
             }
@@ -37,7 +37,7 @@ public class CookieCheck {
         if (cookie != null) {
             System.out.println("INFO --- [userIsAlreadyLoginCheck]  User with id = " + cookie.getValue()
                     + " trying auth again.");
-            return MappingConfig.homePageLink;
+            return MappingConfig.REDIRECT_HOME;
         } else {
             Object targetMethod = point.proceed();
             return targetMethod.toString();
@@ -52,7 +52,7 @@ public class CookieCheck {
             return targetMethod.toString();
         } else {
             System.out.println("INFO --- [userIsNotLoggedInCheck]  Anonymous user trying enter.");
-            return MappingConfig.authPageLink;
+            return MappingConfig.REDIRECT_AUTH;
         }
     }
 }
