@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT}
+spring:
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+  thymeleaf:
+    prefix: file:src/main/resources/templates/
+    suffix: .html
+  datasource:
+    url: jdbc:mysql://${MYSQL_URL}?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    username: ${MYSQL_ROOT_USERNAME}
+    password: ${MYSQL_ROOT_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  resources:
+    static-locations: [classpath:/resources/, classpath:/static/]
+    chain:
+      strategy:
+        content:
+          paths: /**
+          enabled: true

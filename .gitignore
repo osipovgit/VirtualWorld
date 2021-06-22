@@ -1,2 +1,17 @@
-out
+# directories
+build
+gradle
+.gradle
 .idea
+
+# files
+gradlew*
+log
+out
+.class
+settings.gradle
+
+# files with a specific extension
+*.iml
+*.log
+*.sh

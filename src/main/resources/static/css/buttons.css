@@ -1,0 +1,285 @@
+.button-next {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: limegreen;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    padding: 12px;
+    width: 170px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-next span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-next span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-next:hover span {
+    padding-right: 25px;
+}
+
+.button-next:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
+.button-enter {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: limegreen;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    padding: 12px;
+    width: 170px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-enter span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-enter span:after {
+    content: '\27AA';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-enter:hover span {
+    padding-right: 25px;
+}
+
+.button-enter:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
+.button-heal {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: limegreen;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 13px;
+    padding: 5px;
+    width: 80px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-heal span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-heal span:after {
+    content: '+';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-heal:hover span {
+    padding-right: 25px;
+}
+
+.button-heal:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
+.button-out {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: red;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    padding: 12px;
+    width: 170px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-out span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-out span:after {
+    content: '\2716';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-out:hover span {
+    padding-right: 25px;
+}
+
+.button-out:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
+.button-action {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #ff9f00;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 13px;
+    padding: 6px;
+    width: 110px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-action span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-action span:after {
+    content: '\2611';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-action:hover span {
+    padding-right: 25px;
+}
+
+.button-action:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
+.button-action-kill {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: red;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 13px;
+    padding: 6px;
+    width: 110px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.button-action-kill span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-action-kill span:after {
+    content: '\271E';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button-action-kill:hover span {
+    padding-right: 25px;
+}
+
+.button-action-kill:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
+.button-disabled {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: limegreen;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    padding: 12px;
+    width: 170px;
+    transition: all 0.5s;
+    cursor: not-allowed;
+    margin: 5px;
+    vertical-align: middle;
+    opacity: 0.6;
+}
+
+.button-heal-disabled {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: limegreen;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 13px;
+    padding: 5px;
+    width: 80px;
+    transition: all 0.5s;
+    cursor: not-allowed;
+    margin: 5px;
+    vertical-align: middle;
+    opacity: 0.6;
+}

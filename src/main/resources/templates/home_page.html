@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Virtual World</title>
+
+    <link rel="stylesheet" type="text/css" href="css/buttons.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home_page.css"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript" src="js/homePage.js"></script>
+
+</head>
+<body>
+<div class="table" id="table">
+    <table style='border-collapse: collapse'>" +
+        "<tr style='background-color: limegreen; color: white'>" +
+            "<td>ID</td><td>Profession</td><td>Age</td><td>Generation</td><td>Sex</td><td>Health</td>" +
+            "<td>Marriage ID</td><td>Talent</td><td>Raise Health</td></td>
+        </tr>
+    </table>
+</div>
+<div class="options">
+    <button class="button-enter" type="submit" onclick="document.location.href='/simulation'" style="margin-top: 6vh; margin-right: 2vw"><span>Start simulation</span></button>
+    <button class="button-out" type="submit" onclick="logout()" style="margin-top: 6vh; margin-left: 2vw"><span>Logout</span></button>
+
+</div>
+<div class="rules" id="rules">
+
+</div>
+</body>
+</html>
