@@ -11,6 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "session_notifications")
 public class SessionNotification {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -56,4 +57,5 @@ public class SessionNotification {
         return "{" +
                 "\"Notification\":\"" + notification + "\"}";
     }
+
 }

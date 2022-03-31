@@ -13,7 +13,7 @@ function checkingAllActions() {
 }
 
 function decideFate(destiny, id) {
-    $.post(document.location + '/decide_fate', {id: id, destiny: destiny}).then(function () {
+    $.post(document.location + '/decide_fate', {id: id, modelState: destiny}).then(function () {
         getActions()
         displayPerks()
     })
@@ -130,7 +130,7 @@ function goToNextYear() {
                 text: data,
                 icon: "success",
                 button: "Try again!",
-            }).then(function (response) {
+            }).then(function () {
                 document.location = '/'
             })
         } else {

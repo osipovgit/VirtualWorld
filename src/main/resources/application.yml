@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT}
+  port: 8888
 spring:
   mvc:
     view:
@@ -9,17 +9,20 @@ spring:
     prefix: file:src/main/resources/templates/
     suffix: .html
   datasource:
-    url: jdbc:mysql://${MYSQL_URL}?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-    username: ${MYSQL_ROOT_USERNAME}
-    password: ${MYSQL_ROOT_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/virtual_world?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    username: root
+    password: exibxqS1-o
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
-  resources:
-    static-locations: [classpath:/resources/, classpath:/static/]
-    chain:
-      strategy:
-        content:
-          paths: /**
-          enabled: true
+    show-sql: false
+  web:
+    resources:
+      static-locations:
+        [ classpath:/resources/, classpath:/static/, classpath:/templates/]
+      chain:
+        strategy:
+          content:
+            paths: /**
+            enabled: true

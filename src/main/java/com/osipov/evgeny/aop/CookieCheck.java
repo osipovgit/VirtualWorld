@@ -55,4 +55,5 @@ public class CookieCheck {
             return MappingConfig.REDIRECT_AUTH;
         }
     }
+
 }

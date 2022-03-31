@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "simulation_sessions")
 public class SimulationSession {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -154,4 +155,5 @@ public class SimulationSession {
                 ", notifications=" + notifications +
                 '}';
     }
+
 }

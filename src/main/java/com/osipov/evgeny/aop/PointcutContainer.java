@@ -7,12 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class PointcutContainer {
+
     @Pointcut("execution(public String com.osipov.evgeny.controller.AccountController.*(..))")
     public void allAccountControllerMethods() {
+        // Pointcut method
     }
 
     @Pointcut("execution(* com.osipov.evgeny.controller.SimulationController.*(..))")
     public void allSimulationControllerMethods() {
+        // Pointcut method
     }
 
     @Pointcut("execution(* com.osipov.evgeny.controller.AccountController.authorization(..))" +
@@ -20,6 +23,7 @@ public class PointcutContainer {
             "|| execution(* com.osipov.evgeny.controller.WebController.authorization(..))" +
             "|| execution(* com.osipov.evgeny.controller.WebController.registration(..))")
     public void userIsAlreadyRegisteredOrLoggedIn() {
+        // Pointcut method
     }
 
     @Pointcut("!execution(* com.osipov.evgeny.controller.AccountController.authorization(..))" +
@@ -30,6 +34,7 @@ public class PointcutContainer {
             "    || execution(* com.osipov.evgeny.controller.AccountController.*(..))" +
             "    || execution(* com.osipov.evgeny.controller.SimulationController.*(..)))")
     public void userIsNotLoggedIn() {
+        // Pointcut method
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.Random;
 @Entity
 @Table(name = "player_characters")
 public class PlayerCharacter {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -181,4 +182,5 @@ public class PlayerCharacter {
                 "\", \"talent\":\"" + talent +
                 "\", \"pc_id\":\"" + id + "\"}";
     }
+
 }
